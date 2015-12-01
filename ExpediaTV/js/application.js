@@ -148,8 +148,13 @@ var createDestinationView = function(id, cityName, url, airportCode) {
     
     var hotelsMenuItem = mainDoc.getElementById("hotels");
     hotelsMenuItem.addEventListener('select', function(evt) {
-        var hotelsViewDoc = createHotelsView(id, cityName);
-        navigationDocument.pushDocument(hotelsViewDoc);
+            getLatLong(cityName, function(latlong) {
+                       getHotelSearch(latlong, function(hotelSearch) {
+                                      var hotelsViewDoc = createHotelsView(id, cityName, hotelSearch);
+                                      navigationDocument.pushDocument(hotelsViewDoc);
+                                      });
+                       });
+                                    
                                     
     });
     
@@ -191,7 +196,7 @@ var createActivitiesView = function(id, cityName, jsonResponse) {
     return mainDoc;
 }
 
-var createHotelsView = function(id, cityName) {
+var createHotelsView = function(id, cityName, hotelSearch) {
     
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
@@ -202,7 +207,7 @@ var createHotelsView = function(id, cityName) {
     <list>
     <section>
     <listItemLockup>
-    <title>Item 1</title>
+    <title>`+hotelSearch.HotelInfoList.HotelInfo[0].Name+`</title>
     <relatedContent>
     <lockup>
     <img src="" width="857" height="482" />
@@ -404,6 +409,81 @@ var loadActivites = function(location, callback) {
     req.send();
 
 }
+
+
+var getLatLong = function(location, callback) {
+    var req = new XMLHttpRequest();
+    req.responseType = "application/json";
+    req.onerror = function() {
+        var alert = createAlert("ERROR", ""); //leaving 2nd parameter with an empty string
+        navigationDocument.presentModal(alert);
+    };
+    
+    req.onload = function() {
+        
+        var res = JSON.parse(xmlEscape(req.responseText));
+        
+        if (callback) {
+            callback(res.sr[0].ll);
+        }
+    };
+    
+    req.onreadystatechange = function() {
+        var status;
+        var data;
+        
+        if (req.readyState == 4) { //request finished and response is ready
+            status = req.status;
+            if (status == 200) {
+                
+            } else {
+                // handle the error
+            }
+        }
+    };
+    
+    req.open("GET", "http://terminal2.expedia.com/x/suggestions/regions?query=" + location.replace(/ /g, "%20"));
+    req.setRequestHeader("Authorization", "expedia-apikey key="+_API_KEY);
+    req.send();
+    
+}
+
+var getHotelSearch = function(latlong, callback) {
+    var req = new XMLHttpRequest();
+    req.responseType = "application/json";
+    req.onerror = function() {
+        var alert = createAlert("ERROR", ""); //leaving 2nd parameter with an empty string
+        navigationDocument.presentModal(alert);
+    };
+    
+    req.onload = function() {
+        
+        var res = JSON.parse(xmlEscape(req.responseText));
+        
+        if (callback) {
+            callback(res);
+        }
+    };
+    
+    req.onreadystatechange = function() {
+        var status;
+        var data;
+        
+        if (req.readyState == 4) { //request finished and response is ready
+            status = req.status;
+            if (status == 200) {
+                
+            } else {
+                // handle the error
+            }
+        }
+    };
+    
+    req.open("GET", "http://terminal2.expedia.com:80/x/hotels?maxhotels=10&radius=5km&location="+ latlong.lat +"%2C"+latlong.lng);
+    req.setRequestHeader("Authorization", "expedia-apikey key="+_API_KEY);
+    req.send();
+}
+
 
 var ajax = (function() {
     var instance = {};
