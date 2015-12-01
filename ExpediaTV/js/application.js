@@ -215,7 +215,7 @@ var createTimeframeSelectionView = function(id, url) {
         <paradeTemplate>
             <list>
                 <header>
-                    <title>When would you like to go?</title>
+                    <title>When do you want to go?</title>
                 </header>
                 <section>
                     <listItemLockup>
