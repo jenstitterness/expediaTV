@@ -249,13 +249,13 @@ var createAlert = function(title, description) {
 }
 
 // 3
-var createAvailableFlightsView = function(timeFrame) {
+var createAvailableFlightsView = function(departureDate, returnDate) {
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
         <listTemplate>
             <list>
                 <header>
-                    <title>Flights for ${timeFrame} </title>
+                    <title>Flights for ${departureDate} - ${returnDate} </title>
                 </header>
                 <section>
                     <listItemLockup>
@@ -290,10 +290,9 @@ var createTimeframeSelectionView = function(id, url) {
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
         <paradeTemplate>
-    <background>
-    <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"> </img>
-    </background>
-
+            <background>
+                <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"> </img>
+            </background>
             <list>
                 <header>
                     <title>When do you want to go?</title>
@@ -319,23 +318,49 @@ var createTimeframeSelectionView = function(id, url) {
     var mainDoc = parser.parseFromString(mainString, "application/xml");
     
     var listItems = mainDoc.getElementsByTagName("listItemLockup");
+
     listItems.item(0).addEventListener('select', function(evt) {
-        var selectionDoc = createAvailableFlightsView("next week");
-        navigationDocument.pushDocument(selectionDoc);
+                                       
+        var departureDate = getDepartureDate(7);
+        var returnDate = getReturnDate(departureDate);
 
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
+        navigationDocument.pushDocument(selectionDoc);
     });
+    
     listItems.item(1).addEventListener('select', function(evt) {
-        var selectionDoc = createAvailableFlightsView("next month");
+                                       
+        var departureDate = getDepartureDate(31);
+        var returnDate = getReturnDate(departureDate);
+                                       
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
         navigationDocument.pushDocument(selectionDoc);
     });
+    
     listItems.item(2).addEventListener('select', function(evt) {
-        var selectionDoc = createAvailableFlightsView("next six months");
+                                       
+        var departureDate = getDepartureDate(186);
+        var returnDate = getReturnDate(departureDate);
+                                       
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
         navigationDocument.pushDocument(selectionDoc);
-
     });
     
     return mainDoc;
 }
+
+var getDepartureDate = function(numberOfDays) {
+    var newDate = new Date();
+    newDate.setDate(newDate.getDate() + numberOfDays);
+    return newDate;
+}
+
+var getReturnDate = function(departureDate) {
+    var newDate = new Date(departureDate);
+    newDate.setDate(newDate.getDate() + 6);
+    return newDate;
+}
+
 
 var xmlEscape = function(str) {
     return str.replace(/&/g, "&amp;");

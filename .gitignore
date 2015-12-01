@@ -2,6 +2,5 @@
 ExpediaTV/ExpediaTV.xcodeproj/xcuserdata/ngrieble.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
 
 ExpediaTV/ExpediaTV.xcodeproj/project.xcworkspace/xcuserdata/ngrieble.xcuserdatad/UserInterfaceState.xcuserstate
-ExpediaTV/ExpediaTV.xcodeproj/project.xcworkspace/xcuserdata/gpetukhov.xcuserdatad/UserInterfaceState.xcuserstate
-ExpediaTV/ExpediaTV.xcodeproj/xcuserdata/gpetukhov.xcuserdatad/xcschemes/ExpediaTV.xcscheme
-ExpediaTV/ExpediaTV.xcodeproj/xcuserdata/gpetukhov.xcuserdatad/xcschemes/xcschememanagement.plist
+
+*.xcuserstate
