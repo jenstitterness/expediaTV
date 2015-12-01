@@ -155,8 +155,8 @@ var createDestinationView = function(id, url, airportCode) {
     var activitiesMenuItem = mainDoc.getElementById("activities");
     activitiesMenuItem.addEventListener('select', function(evt) {
         
-        loadActivites(airportCode, function() {
-                      var activitiesViewDoc = createActivitiesView(id);
+        loadActivites(airportCode, function(jsonResponse) {
+                      var activitiesViewDoc = createActivitiesView(id, jsonResponse);
                       navigationDocument.pushDocument(activitiesViewDoc);
         });
                                         
@@ -165,30 +165,23 @@ var createDestinationView = function(id, url, airportCode) {
     return mainDoc;
 }
 
-var createActivitiesView = function(id) {
+var createActivitiesView = function(id, jsonResponse) {
     
-    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
-    <document>
-    <listTemplate>
-        <banner>
-            <title>Activities</title>
-        </banner>
-        <list>
-            <section>
-                <listItemLockup>
-                    <title>Item 1</title>
-                    <relatedContent>
-                        <lockup>
-                            <img src="" width="857" height="482" />
-                            <title>Activities Coming Soon</title>
-                            <description>Please check back later</description>
-                        </lockup>
-                    </relatedContent>
-                </listItemLockup>
-            </section>
-        </list>
-    </listTemplate>
-    </document>`
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?><document><listTemplate><banner><title>Activities</title></banner><list><section>`
+    
+    for (var i = 0; i < jsonResponse.activities.length; i++) {
+        
+        var activity = jsonResponse.activities[i];
+        var imageUrl = 'http:' + activity.imageUrl.split('//')[1];
+        
+        mainString += `<listItemLockup><title>`+activity.title+`</title>`
+        mainString += `<relatedContent><lockup><img src="`+imageUrl+`"/>`
+        mainString += `<description>`+activity.title+ `<br/><br/>From `+activity.fromPrice+` `+activity.fromPriceLabel+`</description>`
+        mainString += `</lockup></relatedContent></listItemLockup>`
+    }
+    
+    mainString += `</section></list></listTemplate></document>`
+    
     var parser = new DOMParser();
     var mainDoc = parser.parseFromString(mainString, "application/xml");
     
