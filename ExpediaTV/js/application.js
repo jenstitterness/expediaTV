@@ -1,4 +1,7 @@
+var _API_KEY = "XAAYcpdWrOZCnGyMS5Wmtx06QMG9yWky";
+
 App.onLaunch = function(options) {
+    
   var req = new XMLHttpRequest();
   req.responseType = "application/json";
 
@@ -11,8 +14,6 @@ App.onLaunch = function(options) {
     var res = JSON.parse(req.responseText);
 
     var showcase = createShowcase(res);
-
-//      playVideo();
       
     navigationDocument.pushDocument(showcase);
   };
@@ -20,12 +21,13 @@ App.onLaunch = function(options) {
   req.onreadystatechange = function() {
   var status;
   var data;
+      
   if (req.readyState == 4) { //request finished and response is ready
     status = req.status;
     // var alert = createAlert(status, status); //leaving 2nd parameter with an empty string
     // navigationDocument.presentModal(alert);
     if (status == 200) {
-      data = JSON.parse(req.responseText);
+//      data = JSON.parse(req.responseText);
       // pass the data to a handler
       //
       // var alert = createAlert(data.data[0].user.full_name, data); //leaving 2nd parameter with an empty string
@@ -138,9 +140,13 @@ var createDestinationView = function(id, url) {
     
     var activitiesMenuItem = mainDoc.getElementById("activities");
     activitiesMenuItem.addEventListener('select', function(evt) {
+        
+        loadActivites("pdx", function() {
+                      var activitiesViewDoc = createActivitiesView(id);
+                      navigationDocument.pushDocument(activitiesViewDoc)
+        });
                                         
-        var activitiesViewDoc = createActivitiesView(id);
-        navigationDocument.pushDocument(activitiesViewDoc);
+;
     });
     
     return mainDoc;
@@ -200,4 +206,47 @@ var createAlert = function(title, description) {
     var parser = new DOMParser();
     var alertDoc = parser.parseFromString(alertString, "application/xml");
     return alertDoc
+}
+
+var xmlEscape = function(str) {
+    return str.replace(/&/g, "&amp;");
+    
+//    return str_replace(array('&', '<', '>', '\'', '"'), array('&amp;', '&lt;', '&gt;', '&apos;', '&quot;'), $string);
+}
+
+var loadActivites = function(location, callback) {
+    var req = new XMLHttpRequest();
+    req.responseType = "application/json";
+    req.onerror = function() {
+        var alert = createAlerxt("ERROR", ""); //leaving 2nd parameter with an empty string
+        navigationDocument.presentModal(alert);
+    };
+    
+    req.onload = function() {
+        
+        var res = JSON.parse(xmlEscape(req.responseText));
+        
+        if (callback) {
+            callback(res);
+        }
+    };
+    
+    req.onreadystatechange = function() {
+        var status;
+        var data;
+
+        if (req.readyState == 4) { //request finished and response is ready
+            status = req.status;
+            if (status == 200) {
+                
+            } else {
+                // handle the error
+            }
+        }
+    };
+    
+    req.open("GET", "http://terminal2.expedia.com:80/x/activities/search?location="+location);
+    req.setRequestHeader("Authorization", "expedia-apikey key="+_API_KEY);
+    req.send();
+
 }
