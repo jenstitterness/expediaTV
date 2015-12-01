@@ -112,7 +112,7 @@ var createDestinationView = function(id, url) {
             </background>
             <menuBar>
                 <section>
-                    <menuItem>
+                    <menuItem id="video">
                         <title>Play</title>
                     </menuItem>
                     <menuItem>
@@ -121,6 +121,9 @@ var createDestinationView = function(id, url) {
                     <menuItem>
                         <title>Hotels</title>
                     </menuItem>
+                    <menuItem id="activities">
+                        <title>Activities</title>
+                    </menuItem>
                 </section>
             </menuBar>
         </mainTemplate>
@@ -128,10 +131,47 @@ var createDestinationView = function(id, url) {
     var parser = new DOMParser();
     var mainDoc = parser.parseFromString(mainString, "application/xml");
     
-    var menuItems = mainDoc.getElementsByTagName("menuItem");
-    menuItems.item(0).addEventListener('select', function(evt) {
+    var videoMenuItem = mainDoc.getElementById("video");
+    videoMenuItem.addEventListener('select', function(evt) {
         startVideo(url);
     });
+    
+    var activitiesMenuItem = mainDoc.getElementById("activities");
+    activitiesMenuItem.addEventListener('select', function(evt) {
+                                        
+        var activitiesViewDoc = createActivitiesView(id);
+        navigationDocument.pushDocument(activitiesViewDoc);
+    });
+    
+    return mainDoc;
+}
+
+var createActivitiesView = function(id) {
+    
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+    <listTemplate>
+        <banner>
+            <title>Activities</title>
+        </banner>
+        <list>
+            <section>
+                <listItemLockup>
+                    <title>Item 1</title>
+                    <relatedContent>
+                        <lockup>
+                            <img src="" width="857" height="482" />
+                            <title>Activity 1</title>
+                            <description>A brief description for the first activity should go here.</description>
+                        </lockup>
+                    </relatedContent>
+                </listItemLockup>
+            </section>
+        </list>
+    </listTemplate>
+    </document>`
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
     
     return mainDoc;
 }
