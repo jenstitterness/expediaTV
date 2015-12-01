@@ -3,10 +3,10 @@
         <script type="text/javascript" src="../js/ajax.js"></script>
         <script type="text/javascript" src="../js/flightService.js"></script>
         <script type="text/javascript" src="../js/unrealDealService.js"></script>
+        <script type="text/javascript" src="../js/searchResults.js"></script>
         <script type="text/javascript">
-            App = {};
             var testCallBack = function(results, error) {
-                document.getElementById("test_region_api").textContent = JSON.stringify(results);
+                document.getElementById("test_search_results").textContent = JSON.stringify(results);
             }
         </script>
         <script type="text/javascript" src="../js/searchResults.js"></script>
@@ -15,7 +15,7 @@
         <div id="test_search_results">search_results</div>
         
         <script type="text/javascript">
-            app.onLaunch(testCallBack);
+            searchResults.search("SEA", "LAX", "2016-01-01", "2016-01-07", testCallBack);
         </script>
     </body>
 </html>
