@@ -115,7 +115,7 @@ var createDestinationView = function(id, url) {
                     <menuItem id="video">
                         <title>Play</title>
                     </menuItem>
-                    <menuItem>
+                    <menuItem id="flights">
                         <title>Flights</title>
                     </menuItem>
                     <menuItem>
@@ -135,7 +135,8 @@ var createDestinationView = function(id, url) {
     videoMenuItem.addEventListener('select', function(evt) {
         startVideo(url);
     });
-    menuItems.item(1).addEventListener('select', function(evt) {
+    var flightsMenuItem = mainDoc.getElementById("flights");
+    flightsMenuItem.addEventListener('select', function(evt) {
 
         var timeframeSelectionViewDoc = createTimeframeSelectionView(id, url);
         navigationDocument.pushDocument(timeframeSelectionViewDoc);
@@ -214,7 +215,7 @@ var createTimeframeSelectionView = function(id, url) {
         <paradeTemplate>
             <list>
                 <header>
-                    <title>When do you want to go?</title>
+                    <title>When would you like to go?</title>
                 </header>
                 <section>
                     <listItemLockup>
@@ -253,7 +254,6 @@ var createTimeframeSelectionView = function(id, url) {
     });
     
     return mainDoc;
-    return;
 }
  
 
