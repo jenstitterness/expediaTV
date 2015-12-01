@@ -16,19 +16,25 @@ searchResults = (function(callback){
   }
 
   instance.unrealDealDone = function(model) {
-    instance.results.push(instance.mapUnrealDeal(model));
-    instance.redisplay();
+    var unrealDeal = instance.mapUnrealDeal(model);
+    if(typeof unrealDeal !== "undefined") {
+      instance.results.push(unrealDeal);
+      instance.redisplay();
+    }
   };
 
   instance.mapUnrealDeal = function(model) {
-    return {
-      "name": instance.parseDealName(model.deals.packages[0].marker[0].sticker),
-      "price": model.deals.packages[0].totalPackagePrice
-    };
+    if(model.deals.packages.length>0) {
+      return {
+        "name": instance.parseDealName(model.deals.packages[0].marker[0].sticker),
+        "price": model.deals.packages[0].totalPackagePrice
+      };
+    }
+    return undefined;
   };
 
   instance.parseDealName = function(sticker) {
-    return sticker.replace(/pkg/, "").split(/(?=[A-Z])/).join(" ");
+    return "Package " + sticker.replace(/[pP][kK][gG]/, "").split(/(?=[A-Z])/).join(" ");
   }
 
   instance.unrealDealError = function(error) {
