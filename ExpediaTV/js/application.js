@@ -379,3 +379,169 @@ var loadActivites = function(location, callback) {
     req.send();
 
 }
+
+var ajax = (function() {
+    var instance = {};
+    instance.get = function(endPoint, params, done, error) {
+        var query = endPoint + instance.param(params);
+        var request = new XMLHttpRequest();
+        request.open("GET", query);
+        request.onreadystatechange = function() {
+            if(request.readyState == XMLHttpRequest.DONE) {
+                if(request.status === 200) {
+                    var data;
+                    if(!request.responseType || request.responseType === "text") {
+                        data = JSON.parse(request.responseText);
+                    } else if (request.responseType === "document"){
+                        data = request.responseXML;
+                    } else {
+                        data = request.response;
+                    }
+                    done(data);
+                } else {
+                    error(request.statusText);
+                }
+            }
+        }
+        request.send();
+    };
+    
+    instance.param = function(params) {
+        var results = "";
+        for(var key in params) {
+            if(params.hasOwnProperty(key)){
+                if(results.length == 0) {
+                    results += "?"
+                } else {
+                    results += "&";
+                }
+                results += key + "=" + params[key];
+            }
+        }
+        return results;
+    }
+                     
+    return instance;
+})();
+
+var unrealDealService = (function() {
+
+    var instance = {
+        endPoint: "http://terminal2.expedia.com:80/x/deals/packages",
+        apiKey: "XAAYcpdWrOZCnGyMS5Wmtx06QMG9yWky",
+        roomCount: 1,
+        adultCount: 1,
+        childCount: 0,
+        infantCount: 0,
+        allowDuplicates: false,
+        limit: 1
+    };
+                     
+    instance.search = function(originTLA, destinationTLA, startDate, endDate, stayLength, done, error) {
+        var params = {
+                "startDate": instance.getISODateString(startDate),
+                "endDate": instance.getISODateString(endDate),
+                "originTLA": originTLA,
+                "destinationTLA": destinationTLA,
+                "limit": instance.limit,
+                "lengthOfStay": stayLength,
+                "roomCount": instance.roomCount,
+                "adultCount": instance.adultCount,
+                "childCount": instance.childCount,
+                "infantCount": instance.infantCount,
+                "allowDuplicates": instance.allowDuplicates,
+                "apikey": instance.apiKey
+            };
+        ajax.get(instance.endPoint, params, done, error);
+    };
+
+    instance.getISODateString = function(date) {
+        var outDate = date;
+        if(!(date instanceof Date)) {
+            outDate = new Date(date);
+        }
+        return outDate.toISOString().split("T")[0];
+    }
+                     
+    return instance;
+})();
+
+searchResults = (function(callback){
+  var instance = {
+    results: [],
+    errors: [],
+    displayCallBack: callback
+  };
+
+  instance.search = function(origin, destination, startDate, endDate, callback) {
+    var stayLength = 7;
+    instance.displayCallBack = callback;
+    unrealDealService.search(origin, destination, startDate, endDate, stayLength, instance.unrealDealDone, instance.unrealDealError);
+    flightService.search(origin, destination, startDate, endDate, instance.flightsDone, instance.flightsError);
+  }
+
+  instance.unrealDealDone = function(model) {
+    var unrealDeal = instance.mapUnrealDeal(model);
+    if(typeof unrealDeal !== "undefined") {
+      instance.results.push(unrealDeal);
+      instance.redisplay();
+    }
+  };
+
+  instance.mapUnrealDeal = function(model) {
+    if(model.deals.packages.length>0) {
+      return {
+        "name": instance.parseDealName(model.deals.packages[0].marker[0].sticker),
+        "price": model.deals.packages[0].totalPackagePrice
+      };
+    }
+    return undefined;
+  };
+
+  instance.parseDealName = function(sticker) {
+    return "Package " + sticker.replace(/[pP][kK][gG]/, "").split(/(?=[A-Z])/).join(" ");
+  }
+
+  instance.unrealDealError = function(error) {
+    instance.errors.push(error);
+    instance.redisplay();
+  };
+
+  instance.flightsDone = function(model) {
+    for(var offer in model.offers) {
+      instance.results.push(instance.mapFlights(model.offers[offer], model));
+    }
+    instance.redisplay();
+  };
+
+  instance.mapFlights = function(offer, model) {
+    return {
+      "name": instance.mapOfferName(offer, model),
+      "price": offer.totalFare
+    };
+  }
+
+  instance.mapOfferName = function(offer, model) {
+    return instance.getLegByID(offer.legIds[0], model).segments[0].airlineName;
+  }
+
+  instance.getLegByID = function(legId, model) {
+    for(var leg in model.legs) {
+      if(model.legs[leg].legId == legId) {
+        return model.legs[leg];
+      }
+    }
+    return model.legs[0];
+  }
+
+  instance.flightsError = function(error) {
+    instance.errors.push(error);
+    instance.redisplay();
+  };
+
+  instance.redisplay = function() {
+    instance.displayCallBack(instance.results, instance.error);
+  }
+
+  return instance;
+})();
