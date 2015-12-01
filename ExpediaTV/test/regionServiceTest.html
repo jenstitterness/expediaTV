@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <script type="text/javascript" src="../js/ajax.js"></script>
+        <script type="text/javascript" src="../js/regionService.js"></script>
+    </head>
+    <body>
+        <div id="test_region_api">test_flights_api</div>
+        
+        <script type="text/javascript">
+                    regionService.search(function(model){
+                        document.getElementById("test_region_api").textContent = JSON.stringify(model);
+                    }, function(error){
+                        document.getElementById("test_region_api").textContent = error;
+                    });
+        </script>
+    </body>
+</html>
