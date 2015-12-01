@@ -249,13 +249,13 @@ var createAlert = function(title, description) {
 }
 
 // 3
-var createAvailableFlightsView = function(departureDate, returnDate) {
+var createAvailableFlightsView = function(departureDate, returnDate, timeframe) {
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
         <listTemplate>
             <list>
                 <header>
-                    <title>Flights for ${departureDate} - ${returnDate} </title>
+                    <title>Flights ${timeframe}</title>
                 </header>
                 <section>
                     <listItemLockup>
@@ -324,7 +324,7 @@ var createTimeframeSelectionView = function(id, url) {
         var departureDate = getDepartureDate(7);
         var returnDate = getReturnDate(departureDate);
 
-        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for next week");
         navigationDocument.pushDocument(selectionDoc);
     });
     
@@ -333,7 +333,7 @@ var createTimeframeSelectionView = function(id, url) {
         var departureDate = getDepartureDate(31);
         var returnDate = getReturnDate(departureDate);
                                        
-        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for next month");
         navigationDocument.pushDocument(selectionDoc);
     });
     
@@ -342,7 +342,7 @@ var createTimeframeSelectionView = function(id, url) {
         var departureDate = getDepartureDate(186);
         var returnDate = getReturnDate(departureDate);
                                        
-        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "in six months");
         navigationDocument.pushDocument(selectionDoc);
     });
     
