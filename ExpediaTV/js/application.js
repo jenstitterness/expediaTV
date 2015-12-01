@@ -148,9 +148,9 @@ var createDestinationView = function(id, cityName, url, airportCode) {
     
     var hotelsMenuItem = mainDoc.getElementById("hotels");
     hotelsMenuItem.addEventListener('select', function(evt) {
-                                     
-        var hotelsComingSoonDoc = createAlert("Coming Soon", "");
-        navigationDocument.pushDocument(hotelsComingSoonDoc);
+        var hotelsViewDoc = createHotelsView(id, cityName);
+        navigationDocument.pushDocument(hotelsViewDoc);
+                                    
     });
     
     var activitiesMenuItem = mainDoc.getElementById("activities");
@@ -185,6 +185,37 @@ var createActivitiesView = function(id, cityName, jsonResponse) {
     
     mainString += `</section></list></listTemplate></document>`
     
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
+    
+    return mainDoc;
+}
+
+var createHotelsView = function(id, cityName) {
+    
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+    <listTemplate>
+    <banner>`
+    mainString += `<title>`+cityName+` Hotels</title>`
+    mainString += `</banner>
+    <list>
+    <section>
+    <listItemLockup>
+    <title>Item 1</title>
+    <relatedContent>
+    <lockup>
+    <img src="" width="857" height="482" />
+    <title>Hotel 1</title>
+    <description>A brief description for the first hotel should go here.</description>
+        </lockup>
+        </relatedContent>
+        </listItemLockup>
+        </section>
+        </list>
+        </listTemplate>
+        </document>`
+        
     var parser = new DOMParser();
     var mainDoc = parser.parseFromString(mainString, "application/xml");
     
