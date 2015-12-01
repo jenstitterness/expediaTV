@@ -121,7 +121,7 @@ var createDestinationView = function(id, url, airportCode) {
                     <menuItem id="flights">
                         <title>Flights</title>
                     </menuItem>
-                    <menuItem>
+                    <menuItem id="hotels">
                         <title>Hotels</title>
                     </menuItem>
                     <menuItem id="activities">
@@ -143,6 +143,13 @@ var createDestinationView = function(id, url, airportCode) {
 
         var timeframeSelectionViewDoc = createTimeframeSelectionView(id, url);
         navigationDocument.pushDocument(timeframeSelectionViewDoc);
+    });
+    
+    var hotelsMenuItem = mainDoc.getElementById("hotels");
+    hotelsMenuItem.addEventListener('select', function(evt) {
+                                     
+        var hotelsComingSoonDoc = createAlert("Coming Soon", "");
+        navigationDocument.pushDocument(hotelsComingSoonDoc);
     });
     
     var activitiesMenuItem = mainDoc.getElementById("activities");
@@ -173,8 +180,8 @@ var createActivitiesView = function(id) {
                     <relatedContent>
                         <lockup>
                             <img src="" width="857" height="482" />
-                            <title>Activity 1</title>
-                            <description>A brief description for the first activity should go here.</description>
+                            <title>Activities Coming Soon</title>
+                            <description>Please check back later</description>
                         </lockup>
                     </relatedContent>
                 </listItemLockup>
@@ -205,7 +212,7 @@ var createAlert = function(title, description) {
   var alertString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
       <descriptiveAlertTemplate>
-        <title>${title}</title>
+        <title style="color:rgb(0,0,0)">${title}</title>
         <description>${description}</description>
       </descriptiveAlertTemplate>
     </document>`
