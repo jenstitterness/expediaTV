@@ -61,6 +61,9 @@ var createShowcase = function(feed) {
   var showcase = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
     <showcaseTemplate>
+    <background>
+    <img src="http://localhost:9001/images/background.jpg"> </img>
+    </background>
    <banner>
       <title>Expedia</title>
       <row>
