@@ -226,6 +226,10 @@ var createTimeframeSelectionView = function(id, url) {
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
         <paradeTemplate>
+    <background>
+    <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"> </img>
+    </background>
+
             <list>
                 <header>
                     <title>When do you want to go?</title>
@@ -238,15 +242,10 @@ var createTimeframeSelectionView = function(id, url) {
                         <title>Next month</title>
                     </listItemLockup>
                     <listItemLockup>
-                        <title>Next six months</title>
+                        <title>In six months</title>
                     </listItemLockup>
                 </section>
                 <relatedContent>
-                    <imgDeck>
-                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
-                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
-                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
-                    </imgDeck>
                 </relatedContent>
             </list>
         </paradeTemplate>
@@ -257,13 +256,18 @@ var createTimeframeSelectionView = function(id, url) {
     
     var listItems = mainDoc.getElementsByTagName("listItemLockup");
     listItems.item(0).addEventListener('select', function(evt) {
-        // next week
+        var selectionDoc = createAlert("Next Week Selected", "");
+        navigationDocument.pushDocument(selectionDoc);
+
     });
     listItems.item(1).addEventListener('select', function(evt) {
-        // next month
+        var selectionDoc = createAlert("Next Month Selected", "");
+        navigationDocument.pushDocument(selectionDoc);
     });
-    listItems.item(1).addEventListener('select', function(evt) {
-        // next six months
+    listItems.item(2).addEventListener('select', function(evt) {
+        var selectionDoc = createAlert("In Six Months Selected", "");
+        navigationDocument.pushDocument(selectionDoc);
+
     });
     
     return mainDoc;
