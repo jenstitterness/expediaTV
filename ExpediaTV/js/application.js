@@ -214,6 +214,43 @@ var createAlert = function(title, description) {
     return alertDoc;
 }
 
+// 3
+var createAvailableFlightsView = function(timeFrame) {
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+        <listTemplate>
+            <list>
+                <header>
+                    <title>Flights for ${timeFrame} </title>
+                </header>
+                <section>
+                    <listItemLockup>
+                        <title>Item 1</title>
+                        <relatedContent>
+                            <lockup>
+                                <description>bla bla bla</description>
+                            </lockup>
+                        </relatedContent>
+                    </listItemLockup>
+                    <listItemLockup>
+                        <title>Item 2</title>
+                        <relatedContent>
+                            <lockup>
+                                <description>la la la</description>
+                            </lockup>
+                        </relatedContent>
+                    </listItemLockup>
+                </section>
+            </list>
+        </listTemplate>
+    
+    </document>`
+    
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
+    return mainDoc;
+}
+
 var createTimeframeSelectionView = function(id, url) {
     
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -249,16 +286,16 @@ var createTimeframeSelectionView = function(id, url) {
     
     var listItems = mainDoc.getElementsByTagName("listItemLockup");
     listItems.item(0).addEventListener('select', function(evt) {
-        var selectionDoc = createAlert("Next Week Selected", "");
+        var selectionDoc = createAvailableFlightsView("next week");
         navigationDocument.pushDocument(selectionDoc);
 
     });
     listItems.item(1).addEventListener('select', function(evt) {
-        var selectionDoc = createAlert("Next Month Selected", "");
+        var selectionDoc = createAvailableFlightsView("next month");
         navigationDocument.pushDocument(selectionDoc);
     });
     listItems.item(2).addEventListener('select', function(evt) {
-        var selectionDoc = createAlert("In Six Months Selected", "");
+        var selectionDoc = createAvailableFlightsView("next six months");
         navigationDocument.pushDocument(selectionDoc);
 
     });
