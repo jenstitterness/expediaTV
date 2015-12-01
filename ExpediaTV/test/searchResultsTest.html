@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <script type="text/javascript" src="../js/ajax.js"></script>
+        <script type="text/javascript" src="../js/flightService.js"></script>
+        <script type="text/javascript" src="../js/unrealDealService.js"></script>
+        <script type="text/javascript">
+            App = {};
+            var testCallBack = function(results, error) {
+                document.getElementById("test_region_api").textContent = JSON.stringify(results);
+            }
+        </script>
+        <script type="text/javascript" src="../js/searchResults.js"></script>
+    </head>
+    <body>
+        <div id="test_search_results">search_results</div>
+        
+        <script type="text/javascript">
+            app.onLaunch(testCallBack);
+        </script>
+    </body>
+</html>
