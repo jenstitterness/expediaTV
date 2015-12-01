@@ -117,7 +117,7 @@ var createDestinationView = function(id, url) {
                     <menuItem id="video">
                         <title>Play</title>
                     </menuItem>
-                    <menuItem>
+                    <menuItem id="flights">
                         <title>Flights</title>
                     </menuItem>
                     <menuItem>
@@ -137,16 +137,21 @@ var createDestinationView = function(id, url) {
     videoMenuItem.addEventListener('select', function(evt) {
         startVideo(url);
     });
+    var flightsMenuItem = mainDoc.getElementById("flights");
+    flightsMenuItem.addEventListener('select', function(evt) {
+
+        var timeframeSelectionViewDoc = createTimeframeSelectionView(id, url);
+        navigationDocument.pushDocument(timeframeSelectionViewDoc);
+    });
     
     var activitiesMenuItem = mainDoc.getElementById("activities");
     activitiesMenuItem.addEventListener('select', function(evt) {
         
         loadActivites("pdx", function() {
                       var activitiesViewDoc = createActivitiesView(id);
-                      navigationDocument.pushDocument(activitiesViewDoc)
+                      navigationDocument.pushDocument(activitiesViewDoc);
         });
                                         
-;
     });
     
     return mainDoc;
@@ -205,7 +210,55 @@ var createAlert = function(title, description) {
     </document>`
     var parser = new DOMParser();
     var alertDoc = parser.parseFromString(alertString, "application/xml");
-    return alertDoc
+    return alertDoc;
+}
+
+var createTimeframeSelectionView = function(id, url) {
+    
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+        <paradeTemplate>
+            <list>
+                <header>
+                    <title>When do you want to go?</title>
+                </header>
+                <section>
+                    <listItemLockup>
+                        <title>Next week</title>
+                    </listItemLockup>
+                    <listItemLockup>
+                        <title>Next month</title>
+                    </listItemLockup>
+                    <listItemLockup>
+                        <title>Next six months</title>
+                    </listItemLockup>
+                </section>
+                <relatedContent>
+                    <imgDeck>
+                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
+                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
+                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
+                    </imgDeck>
+                </relatedContent>
+            </list>
+        </paradeTemplate>
+    </document>`
+
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
+    
+    var listItems = mainDoc.getElementsByTagName("listItemLockup");
+    listItems.item(0).addEventListener('select', function(evt) {
+        // next week
+    });
+    listItems.item(1).addEventListener('select', function(evt) {
+        // next month
+    });
+    listItems.item(1).addEventListener('select', function(evt) {
+        // next six months
+    });
+    
+    return mainDoc;
 }
 
 var xmlEscape = function(str) {
