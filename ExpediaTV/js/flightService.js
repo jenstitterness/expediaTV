@@ -6,7 +6,7 @@ var flightService = (function() {
         offerCount: 10
     };
                      
-    instance.search = function(departureAirport, arrivalAirport, departureDate, returnDate, done) {
+    instance.search = function(departureAirport, arrivalAirport, departureDate, returnDate, done, error) {
         var query = instance.endPoint + instance.param({
                 "departureDate": departureDate,
                 "returnDate": returnDate,
@@ -19,7 +19,8 @@ var flightService = (function() {
         request.open("GET", query);
         request.onreadystatechange = function() {
             if(request.readyState == XMLHttpRequest.DONE) {
-                var data;
+                if(request.status === 200) {
+                     var data;
                      if(!request.responseType || request.responseType === "text") {
                         data = JSON.parse(request.responseText);
                      } else if (request.responseType === "document"){
@@ -27,7 +28,10 @@ var flightService = (function() {
                      } else {
                         data = request.response;
                      }
-                done(data);
+                     done(data);
+                } else {
+                     error(request.statusText);
+                }
             }
         }
         request.send();
