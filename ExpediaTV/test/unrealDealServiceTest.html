@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <script type="text/javascript" src="../js/ajax.js"></script>
+        <script type="text/javascript" src="../js/unrealDealService.js"></script>
+    </head>
+    <body>
+        <div id="test_deal_api">test_deal_api</div>
+        <script type="text/javascript">
+                    unrealDealService.search("SEA", "LAX", "2016-01-01", "2016-02-01", 7, function(model){
+                        document.getElementById("test_deal_api").textContent = JSON.stringify(model);
+                    }, function(error){
+                        document.getElementById("test_deal_api").textContent = error;
+                    });
+        </script>
+    </body>
+</html>
