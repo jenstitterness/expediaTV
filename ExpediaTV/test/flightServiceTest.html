@@ -7,7 +7,7 @@
         <div id="test_flights_api">test_flights_api</div>
         
         <script type="text/javascript">
-                    flightService.search("SEA", "LAX", "2016-01-01", "2016-01-06", function(model){
+                    flightService.search("SEA", "LAX", "2016-01-01", "2016-01-07", function(model){
                         document.getElementById("test_flights_api").textContent = JSON.stringify(model);
                     }, function(error){
                         document.getElementById("test_flights_api").textContent = error;
