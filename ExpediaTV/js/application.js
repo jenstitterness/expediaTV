@@ -48,22 +48,23 @@ var createShowcase = function(feed) {
     <document>
     <showcaseTemplate>
     <background>
-    <img src="http://localhost:9001/images/background.jpg"> </img>
+        <img src="http://localhost:9001/images/background-w.png"> </img>
     </background>
    <banner>
-      <title style="color:rgb(50, 50, 250)">ExpediaTV</title>
-      <row>
-      </row>
+       <img width="350" height="250" style="tv-align:center;tv-position:top" src="http://localhost:9001/images/logo.png" />
    </banner>
    <carousel>
       <section>`
 
     
     for (var i = 0; i < feed.destinations.length; i++) {
+
         var youtubeURL = feed.destinations[i].youtubeURL;
-        
-        showcase += `<lockup url="` + youtubeURL + `"><img src="http://img.youtube.com/vi/`+ feed.destinations[i].youtubeId +`/maxresdefault.jpg" />`
-        showcase += `<description>`+feed.destinations[i].title+`</description>`
+
+        showcase += `<lockup url="` + youtubeURL + `">`
+        showcase += `<description style="color:rgb(0,0,0)">`+feed.destinations[i].title+`</description>`
+        showcase += `<img src="http://img.youtube.com/vi/`+ feed.destinations[i].youtubeId +`/maxresdefault.jpg" />`
+
         showcase += `</lockup>`
     }
     
