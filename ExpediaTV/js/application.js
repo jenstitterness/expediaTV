@@ -63,7 +63,7 @@ var createShowcase = function(feed) {
 
         var youtubeURL = feed.destinations[i].youtubeURL;
 
-        showcase += `<lockup url="` + youtubeURL + `" id="` + feed.destinations[i].youtubeId + `" airportCode="` + feed.destinations[i].airportCode + `">`
+        showcase += `<lockup url="` + youtubeURL + `" id="` + feed.destinations[i].youtubeId + `" airportCode="` + feed.destinations[i].airportCode + `" cityName="` + feed.destinations[i].title + `">`
         showcase += `<header><text style="color:rgb(104,104,104);tv-text-style:title3;text-align:center;">`
                 +feed.destinations[i].title+`</text></header>`
         showcase += `<img src="http://img.youtube.com/vi/`+ feed.destinations[i].youtubeId +`/maxresdefault.jpg" />`
@@ -93,8 +93,9 @@ var createShowcase = function(feed) {
                                          var url = evt.target.getAttribute('url');
                                          var id = evt.target.getAttribute('id');
                                          var airportCode = evt.target.getAttribute('airportCode');
+                                         var cityName = evt.target.getAttribute('cityName');
                                          
-                                         var DestinationViewDoc = createDestinationView(id, url, airportCode);
+                                         var DestinationViewDoc = createDestinationView(id, cityName, url, airportCode);
                                          
                                          navigationDocument.pushDocument(DestinationViewDoc);
                                 
@@ -105,7 +106,7 @@ var createShowcase = function(feed) {
 
 };
 
-var createDestinationView = function(id, url, airportCode) {
+var createDestinationView = function(id, cityName, url, airportCode) {
     
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
@@ -156,7 +157,7 @@ var createDestinationView = function(id, url, airportCode) {
     activitiesMenuItem.addEventListener('select', function(evt) {
         
         loadActivites(airportCode, function(jsonResponse) {
-                      var activitiesViewDoc = createActivitiesView(id, jsonResponse);
+                      var activitiesViewDoc = createActivitiesView(id, cityName, jsonResponse);
                       navigationDocument.pushDocument(activitiesViewDoc);
         });
                                         
@@ -165,9 +166,11 @@ var createDestinationView = function(id, url, airportCode) {
     return mainDoc;
 }
 
-var createActivitiesView = function(id, jsonResponse) {
+var createActivitiesView = function(id, cityName, jsonResponse) {
     
-    var mainString = `<?xml version="1.0" encoding="UTF-8" ?><document><listTemplate><banner><title>Activities</title></banner><list><section>`
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?><document><listTemplate><banner>`
+    mainString += `<title>` + cityName + ` Activities</title>`
+    mainString += `</banner><list><section>`
     
     for (var i = 0; i < jsonResponse.activities.length; i++) {
         
