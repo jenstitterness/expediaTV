@@ -62,8 +62,8 @@ var createShowcase = function(feed) {
         var youtubeURL = feed.destinations[i].youtubeURL;
 
         showcase += `<lockup url="` + youtubeURL + `" id="` + feed.destinations[i].youtubeId + `">`
-        showcase += `<description style="color:rgb(104,104,104);font-size:200;font-weight:bold;text-align:center;">`
-                +feed.destinations[i].title+`</description>`
+        showcase += `<header><text style="color:rgb(104,104,104);tv-text-style:title3;text-align:center;">`
+                +feed.destinations[i].title+`</text></header>`
         showcase += `<img src="http://img.youtube.com/vi/`+ feed.destinations[i].youtubeId +`/maxresdefault.jpg" />`
 
         
@@ -74,6 +74,7 @@ var createShowcase = function(feed) {
                     </carousel>
                     </showcaseTemplate></document>
 `
+    
 
 
   var parser = new DOMParser();
