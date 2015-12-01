@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <script type="text/javascript" src="../jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="../js/flightService.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+            $("#test_flights_api").click(function(){
+                                         flightService.search("SEA", "LAX", "2016-01-01", "2016-01-06", function(model){
+                                                              $("#test_flights_api").text(JSON.stringify(model));
+                                                              });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="test_flights_api">test_flights_api</div>
+    </body>
+</html>
