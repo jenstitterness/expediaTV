@@ -12,9 +12,9 @@ App.onLaunch = function(options) {
 
     var showcase = createShowcase(res);
 
-      playVideo();
+//      playVideo();
       
-//    navigationDocument.presentModal(showcase);
+    navigationDocument.presentModal(showcase);
   };
 
   req.onreadystatechange = function() {
@@ -37,7 +37,7 @@ App.onLaunch = function(options) {
   }
 };
 
-  req.open("GET", "http://localhost:9001/js/feed.json");
+  req.open("GET", "http://localhost:9001/js/destinations.json");
 
   req.send();
 };
@@ -70,17 +70,14 @@ var createShowcase = function(feed) {
    <carousel>
       <section>`
 
-
-      for(var i = 0; i < feed.data.length; i++) {
-        showcase += `<lockup><img src="`+ feed.data[i].images.standard_resolution.url+`" />`
-
-         if (feed.data[i].location) {
-          showcase += `<description>`+feed.data[i].caption.text+`</description>`
-         }
-
-                    showcase += `</lockup>`
-      }
-
+    
+    for (var i = 0; i < feed.destinations.length; i++) {
+        
+        showcase += `<lockup><img src="http://img.youtube.com/vi/`+ feed.destinations[i].youtubeId +`/maxresdefault.jpg" />`
+        showcase += `<description>`+feed.destinations[i].title+`</description>`
+        showcase += `</lockup>`
+    }
+    
     showcase += `</section>
                     </carousel>
                     </showcaseTemplate></document>
