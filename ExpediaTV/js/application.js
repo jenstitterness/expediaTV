@@ -67,7 +67,6 @@ var createShowcase = function(feed) {
    <banner>
       <title>Expedia</title>
       <row>
-         <button>...</button>
       </row>
    </banner>
    <carousel>
