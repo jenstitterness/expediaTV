@@ -65,7 +65,7 @@ var createShowcase = function(feed) {
     <img src="http://localhost:9001/images/background.jpg"> </img>
     </background>
    <banner>
-      <title>Expedia</title>
+      <title style="color:rgb(50, 50, 250)">ExpediaTV</title>
       <row>
       </row>
    </banner>
