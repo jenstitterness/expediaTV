@@ -63,7 +63,7 @@ var createShowcase = function(feed) {
 
         var youtubeURL = feed.destinations[i].youtubeURL;
 
-        showcase += `<lockup url="` + youtubeURL + `" id="` + feed.destinations[i].youtubeId + `" airportCode="` + feed.destinations[i].airportCode + `">`
+        showcase += `<lockup url="` + youtubeURL + `" id="` + feed.destinations[i].youtubeId + `" airportCode="` + feed.destinations[i].airportCode + `" cityName="` + feed.destinations[i].title + `">`
         showcase += `<header><text style="color:rgb(104,104,104);tv-text-style:title3;text-align:center;">`
                 +feed.destinations[i].title+`</text></header>`
         showcase += `<img src="http://img.youtube.com/vi/`+ feed.destinations[i].youtubeId +`/maxresdefault.jpg" />`
@@ -93,8 +93,9 @@ var createShowcase = function(feed) {
                                          var url = evt.target.getAttribute('url');
                                          var id = evt.target.getAttribute('id');
                                          var airportCode = evt.target.getAttribute('airportCode');
+                                         var cityName = evt.target.getAttribute('cityName');
                                          
-                                         var DestinationViewDoc = createDestinationView(id, url, airportCode);
+                                         var DestinationViewDoc = createDestinationView(id, cityName, url, airportCode);
                                          
                                          navigationDocument.pushDocument(DestinationViewDoc);
                                 
@@ -105,7 +106,7 @@ var createShowcase = function(feed) {
 
 };
 
-var createDestinationView = function(id, url, airportCode) {
+var createDestinationView = function(id, cityName, url, airportCode) {
     
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
@@ -147,16 +148,16 @@ var createDestinationView = function(id, url, airportCode) {
     
     var hotelsMenuItem = mainDoc.getElementById("hotels");
     hotelsMenuItem.addEventListener('select', function(evt) {
-                                     
-        var hotelsComingSoonDoc = createAlert("Coming Soon", "");
-        navigationDocument.pushDocument(hotelsComingSoonDoc);
+        var hotelsViewDoc = createHotelsView(id, cityName);
+        navigationDocument.pushDocument(hotelsViewDoc);
+                                    
     });
     
     var activitiesMenuItem = mainDoc.getElementById("activities");
     activitiesMenuItem.addEventListener('select', function(evt) {
         
         loadActivites(airportCode, function(jsonResponse) {
-                      var activitiesViewDoc = createActivitiesView(id, jsonResponse);
+                      var activitiesViewDoc = createActivitiesView(id, cityName, jsonResponse);
                       navigationDocument.pushDocument(activitiesViewDoc);
         });
                                         
@@ -165,9 +166,11 @@ var createDestinationView = function(id, url, airportCode) {
     return mainDoc;
 }
 
-var createActivitiesView = function(id, jsonResponse) {
+var createActivitiesView = function(id, cityName, jsonResponse) {
     
-    var mainString = `<?xml version="1.0" encoding="UTF-8" ?><document><listTemplate><banner><title>Activities</title></banner><list><section>`
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?><document><listTemplate><banner>`
+    mainString += `<title>` + cityName + ` Activities</title>`
+    mainString += `</banner><list><section>`
     
     for (var i = 0; i < jsonResponse.activities.length; i++) {
         
@@ -182,6 +185,37 @@ var createActivitiesView = function(id, jsonResponse) {
     
     mainString += `</section></list></listTemplate></document>`
     
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
+    
+    return mainDoc;
+}
+
+var createHotelsView = function(id, cityName) {
+    
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+    <listTemplate>
+    <banner>`
+    mainString += `<title>`+cityName+` Hotels</title>`
+    mainString += `</banner>
+    <list>
+    <section>
+    <listItemLockup>
+    <title>Item 1</title>
+    <relatedContent>
+    <lockup>
+    <img src="" width="857" height="482" />
+    <title>Hotel 1</title>
+    <description>A brief description for the first hotel should go here.</description>
+        </lockup>
+        </relatedContent>
+        </listItemLockup>
+        </section>
+        </list>
+        </listTemplate>
+        </document>`
+        
     var parser = new DOMParser();
     var mainDoc = parser.parseFromString(mainString, "application/xml");
     
@@ -212,6 +246,43 @@ var createAlert = function(title, description) {
     var parser = new DOMParser();
     var alertDoc = parser.parseFromString(alertString, "application/xml");
     return alertDoc;
+}
+
+// 3
+var createAvailableFlightsView = function(departureDate, returnDate) {
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+        <listTemplate>
+            <list>
+                <header>
+                    <title>Flights for ${departureDate} - ${returnDate} </title>
+                </header>
+                <section>
+                    <listItemLockup>
+                        <title>Item 1</title>
+                        <relatedContent>
+                            <lockup>
+                                <description>bla bla bla</description>
+                            </lockup>
+                        </relatedContent>
+                    </listItemLockup>
+                    <listItemLockup>
+                        <title>Item 2</title>
+                        <relatedContent>
+                            <lockup>
+                                <description>la la la</description>
+                            </lockup>
+                        </relatedContent>
+                    </listItemLockup>
+                </section>
+            </list>
+        </listTemplate>
+    
+    </document>`
+    
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
+    return mainDoc;
 }
 
 var createTimeframeSelectionView = function(id, url) {
@@ -247,31 +318,32 @@ var createTimeframeSelectionView = function(id, url) {
     var mainDoc = parser.parseFromString(mainString, "application/xml");
     
     var listItems = mainDoc.getElementsByTagName("listItemLockup");
+
     listItems.item(0).addEventListener('select', function(evt) {
-                                    
+                                       
         var departureDate = getDepartureDate(7);
         var returnDate = getReturnDate(departureDate);
-                                       
-        var selectionDoc = createAlert(departureDate + ", " + returnDate, "");
-        navigationDocument.pushDocument(selectionDoc);
 
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
+        navigationDocument.pushDocument(selectionDoc);
     });
+    
     listItems.item(1).addEventListener('select', function(evt) {
                                        
         var departureDate = getDepartureDate(31);
         var returnDate = getReturnDate(departureDate);
                                        
-        var selectionDoc = createAlert(departureDate + ", " + returnDate, "");
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
         navigationDocument.pushDocument(selectionDoc);
     });
+    
     listItems.item(2).addEventListener('select', function(evt) {
                                        
         var departureDate = getDepartureDate(186);
         var returnDate = getReturnDate(departureDate);
                                        
-        var selectionDoc = createAlert(departureDate + ", " + returnDate, "");
+        var selectionDoc = createAvailableFlightsView(departureDate, returnDate);
         navigationDocument.pushDocument(selectionDoc);
-
     });
     
     return mainDoc;
