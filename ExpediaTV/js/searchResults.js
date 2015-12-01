@@ -1,13 +1,5 @@
-App.onLaunch = function(options, displayCallBack) {
-  var origin = "sea";
-  var destination = "lax";
-  var startDate = new Date("2016-01-01");
-  var endDate = new Date("2016-01-07");
-  var stayLength = 7;
-  var results = searchResults()
-    unrealDealService.search(origin, destination, startDate, endDate, stayLength, results.unrealDealDone, results.unrealDealError);
-    flightsService.search(origin, destination, startDate, endDate, results.flightsDone, results.flightsError);
-};
+if(typeof flightService === "undefined"){alert("flightService is undefined!");}
+if(typeof flightService === "undefined"){alert("flightService is undefined!");}
 
 searchResults = (function(callback){
   var instance = {
@@ -16,6 +8,13 @@ searchResults = (function(callback){
     displayCallBack: callback
   };
 
+  instance.search = function(origin, destination, startDate, endDate, callback) {
+    var stayLength = 7;
+    instance.displayCallBack = callback;
+    unrealDealService.search(origin, destination, startDate, endDate, stayLength, instance.unrealDealDone, instance.unrealDealError);
+    flightService.search(origin, destination, startDate, endDate, instance.flightsDone, instance.flightsError);
+  }
+
   instance.unrealDealDone = function(model) {
     instance.results.push(instance.mapUnrealDeal(model));
     instance.redisplay();
@@ -23,7 +22,7 @@ searchResults = (function(callback){
 
   instance.mapUnrealDeal = function(model) {
     return {
-      "name": parseDealName(model.deals.packages[0].marker[0].sticker),
+      "name": instance.parseDealName(model.deals.packages[0].marker[0].sticker),
       "price": model.deals.packages[0].totalPackagePrice
     };
   };
@@ -39,7 +38,7 @@ searchResults = (function(callback){
 
   instance.flightsDone = function(model) {
     for(var offer in model.offers) {
-      instance.results.push(offer);
+      instance.results.push(instance.mapFlights(model.offers[offer], model));
     }
     instance.redisplay();
   };
@@ -47,23 +46,18 @@ searchResults = (function(callback){
   instance.mapFlights = function(offer, model) {
     return {
       "name": instance.mapOfferName(offer, model),
-      "price": offer.totalFarePrice
+      "price": offer.totalFare
     };
   }
 
   instance.mapOfferName = function(offer, model) {
-    var name = "";
-    for(var legId in offer.legIds) {
-      if(name.length > 0) {name += " & "}
-      name += model.legs[legId].segments[0].AirlineName;
-    }
-    return name;
+    return instance.getLegByID(offer.legIds[0], model).segments[0].airlineName;
   }
 
   instance.getLegByID = function(legId, model) {
     for(var leg in model.legs) {
-      if(leg.legId == legId) {
-        return leg;
+      if(model.legs[leg].legId == legId) {
+        return model.legs[leg];
       }
     }
     return model.legs[0];
@@ -75,8 +69,8 @@ searchResults = (function(callback){
   };
 
   instance.redisplay = function() {
-    callback(instance.results, instance.error);
+    instance.displayCallBack(instance.results, instance.error);
   }
 
   return instance;
-});
+})();
