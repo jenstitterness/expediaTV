@@ -271,7 +271,7 @@ var loadActivites = function(location, callback) {
     var req = new XMLHttpRequest();
     req.responseType = "application/json";
     req.onerror = function() {
-        var alert = createAlerxt("ERROR", ""); //leaving 2nd parameter with an empty string
+        var alert = createAlert("ERROR", ""); //leaving 2nd parameter with an empty string
         navigationDocument.presentModal(alert);
     };
     
