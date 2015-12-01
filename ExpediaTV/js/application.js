@@ -131,6 +131,11 @@ var createDestinationView = function(id, url) {
     menuItems.item(0).addEventListener('select', function(evt) {
         startVideo(url);
     });
+    menuItems.item(1).addEventListener('select', function(evt) {
+
+        var timeframeSelectionViewDoc = createTimeframeSelectionView(id, url);
+        navigationDocument.pushDocument(timeframeSelectionViewDoc);
+    });
     
     return mainDoc;
 }
@@ -160,3 +165,54 @@ var createAlert = function(title, description) {
     var alertDoc = parser.parseFromString(alertString, "application/xml");
     return alertDoc
 }
+
+var createTimeframeSelectionView = function(id, url) {
+    
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+        <paradeTemplate>
+            <list>
+                <header>
+                    <title>When do you want to go?</title>
+                </header>
+                <section>
+                    <listItemLockup>
+                        <title>Next week</title>
+                    </listItemLockup>
+                    <listItemLockup>
+                        <title>Next month</title>
+                    </listItemLockup>
+                    <listItemLockup>
+                        <title>Next six months</title>
+                    </listItemLockup>
+                </section>
+                <relatedContent>
+                    <imgDeck>
+                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
+                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
+                        <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
+                    </imgDeck>
+                </relatedContent>
+            </list>
+        </paradeTemplate>
+    </document>`
+
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
+    
+    var listItems = mainDoc.getElementsByTagName("listItemLockup");
+    listItems.item(0).addEventListener('select', function(evt) {
+        // next week
+    });
+    listItems.item(1).addEventListener('select', function(evt) {
+        // next month
+    });
+    listItems.item(1).addEventListener('select', function(evt) {
+        // next six months
+    });
+    
+    return mainDoc;
+    return;
+}
+ 
+
