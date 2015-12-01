@@ -219,10 +219,9 @@ var createTimeframeSelectionView = function(id, url) {
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
         <paradeTemplate>
-    <background>
-    <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"> </img>
-    </background>
-
+            <background>
+                <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"> </img>
+            </background>
             <list>
                 <header>
                     <title>When do you want to go?</title>
@@ -249,22 +248,47 @@ var createTimeframeSelectionView = function(id, url) {
     
     var listItems = mainDoc.getElementsByTagName("listItemLockup");
     listItems.item(0).addEventListener('select', function(evt) {
-        var selectionDoc = createAlert("Next Week Selected", "");
+                                    
+        var departureDate = getDepartureDate(7);
+        var returnDate = getReturnDate(departureDate);
+                                       
+        var selectionDoc = createAlert(departureDate + ", " + returnDate, "");
         navigationDocument.pushDocument(selectionDoc);
 
     });
     listItems.item(1).addEventListener('select', function(evt) {
-        var selectionDoc = createAlert("Next Month Selected", "");
+                                       
+        var departureDate = getDepartureDate(31);
+        var returnDate = getReturnDate(departureDate);
+                                       
+        var selectionDoc = createAlert(departureDate + ", " + returnDate, "");
         navigationDocument.pushDocument(selectionDoc);
     });
     listItems.item(2).addEventListener('select', function(evt) {
-        var selectionDoc = createAlert("In Six Months Selected", "");
+                                       
+        var departureDate = getDepartureDate(186);
+        var returnDate = getReturnDate(departureDate);
+                                       
+        var selectionDoc = createAlert(departureDate + ", " + returnDate, "");
         navigationDocument.pushDocument(selectionDoc);
 
     });
     
     return mainDoc;
 }
+
+var getDepartureDate = function(numberOfDays) {
+    var newDate = new Date();
+    newDate.setDate(newDate.getDate() + numberOfDays);
+    return newDate;
+}
+
+var getReturnDate = function(departureDate) {
+    var newDate = new Date(departureDate);
+    newDate.setDate(newDate.getDate() + 6);
+    return newDate;
+}
+
 
 var xmlEscape = function(str) {
     return str.replace(/&/g, "&amp;");
