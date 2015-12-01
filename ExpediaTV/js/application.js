@@ -61,10 +61,11 @@ var createShowcase = function(feed) {
 
         var youtubeURL = feed.destinations[i].youtubeURL;
 
-        showcase += `<lockup url="` + youtubeURL + `">`
+        showcase += `<lockup url="` + youtubeURL + `" id="` + feed.destinations[i].youtubeId + `">`
         showcase += `<description style="color:rgb(0,0,0)">`+feed.destinations[i].title+`</description>`
         showcase += `<img src="http://img.youtube.com/vi/`+ feed.destinations[i].youtubeId +`/maxresdefault.jpg" />`
 
+        
         showcase += `</lockup>`
     }
     
@@ -84,17 +85,13 @@ var createShowcase = function(feed) {
     for (var j = 0; j < lockups.length; j++) {
         
         lockups.item(j).addEventListener('select', function(evt) {
-                                var url = evt.target.getAttribute('url');
-
-                                
-                                var player = new Player();
-                                
-                                player.playlist = new Playlist();
-                                
-                                var video = new MediaItem('video', url);
-                                
-                                player.playlist.push(video);
-                                player.play();
+                                         
+                                         var url = evt.target.getAttribute('url');
+                                         var id = evt.target.getAttribute('id');
+                                         
+                                         var DestinationViewDoc = createDestinationView(id, url);
+                                         
+                                         navigationDocument.pushDocument(DestinationViewDoc);
                                 
                                 });
     }
@@ -103,7 +100,51 @@ var createShowcase = function(feed) {
 
 };
 
+var createDestinationView = function(id, url) {
+    
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+    <mainTemplate>
+            <background>
+                <img src="http://img.youtube.com/vi/`+ id +`/maxresdefault.jpg"/>
+            </background>
+            <menuBar>
+                <section>
+                    <menuItem>
+                        <title>Play</title>
+                    </menuItem>
+                    <menuItem>
+                        <title>Flights</title>
+                    </menuItem>
+                    <menuItem>
+                        <title>Hotels</title>
+                    </menuItem>
+                </section>
+            </menuBar>
+        </mainTemplate>
+    </document>`
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
+    
+    var menuItems = mainDoc.getElementsByTagName("menuItem");
+    menuItems.item(0).addEventListener('select', function(evt) {
+        startVideo(url);
+    });
+    
+    return mainDoc;
+}
 
+var startVideo = function(url) {
+    
+    var player = new Player();
+    
+    player.playlist = new Playlist();
+    
+    var video = new MediaItem('video', url);
+    
+    player.playlist.push(video);
+    player.play();
+}
 
 // 2
 var createAlert = function(title, description) {
