@@ -63,7 +63,7 @@ var createShowcase = function(feed) {
 
         var youtubeURL = feed.destinations[i].youtubeURL;
 
-        showcase += `<lockup url="` + youtubeURL + `" id="` + feed.destinations[i].youtubeId + `">`
+        showcase += `<lockup url="` + youtubeURL + `" id="` + feed.destinations[i].youtubeId + `" airportCode="` + feed.destinations[i].airportCode + `">`
         showcase += `<header><text style="color:rgb(104,104,104);tv-text-style:title3;text-align:center;">`
                 +feed.destinations[i].title+`</text></header>`
         showcase += `<img src="http://img.youtube.com/vi/`+ feed.destinations[i].youtubeId +`/maxresdefault.jpg" />`
@@ -92,8 +92,9 @@ var createShowcase = function(feed) {
                                          
                                          var url = evt.target.getAttribute('url');
                                          var id = evt.target.getAttribute('id');
+                                         var airportCode = evt.target.getAttribute('airportCode');
                                          
-                                         var DestinationViewDoc = createDestinationView(id, url);
+                                         var DestinationViewDoc = createDestinationView(id, url, airportCode);
                                          
                                          navigationDocument.pushDocument(DestinationViewDoc);
                                 
@@ -104,7 +105,7 @@ var createShowcase = function(feed) {
 
 };
 
-var createDestinationView = function(id, url) {
+var createDestinationView = function(id, url, airportCode) {
     
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
@@ -147,7 +148,7 @@ var createDestinationView = function(id, url) {
     var activitiesMenuItem = mainDoc.getElementById("activities");
     activitiesMenuItem.addEventListener('select', function(evt) {
         
-        loadActivites("pdx", function() {
+        loadActivites(airportCode, function() {
                       var activitiesViewDoc = createActivitiesView(id);
                       navigationDocument.pushDocument(activitiesViewDoc);
         });
