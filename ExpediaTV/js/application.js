@@ -157,6 +157,7 @@ var createDestinationView = function(id, cityName, url, airportCode) {
                        getHotelSearch(latlong, function(hotelSearch) {
                                       var hotelsViewDoc = createHotelsView(id, cityName, hotelSearch);
                                       navigationDocument.pushDocument(hotelsViewDoc);
+                                      populateHotelPhotos(hotelsViewDoc);
                                       });
                        });
                                     
@@ -220,23 +221,31 @@ var createHotelsView = function(id, cityName, hotelSearch) {
         var starRatingValue = hotelInfo.StarRating/5;
         var guestRatingValue = hotelInfo.GuestRating/5;
         
+<<<<<<< Updated upstream
         mainString += `<listItemLockup><title style="color:#1f1f1f;"><badge style="height:50;width:50;" src="`+hotelInfo.ThumbnailUrl+`"/> `+hotelInfo.Name+`</title>`
         mainString += `<relatedContent height="500"><lockup>`
         mainString += `<title style="tv-align:center;">`+hotelInfo.Name+`</title>`
+=======
+        mainString += `<listItemLockup style="padding:0;margin:10px;"><title style="padding:0;margin:10px">`+hotelInfo.Name+`</title>`
+        mainString += `<relatedContent style="padding:0;margin:20px"><lockup style="padding:0;margin:10px">`
+        mainString += `<img style="padding:0;margin:10px;tv-position:top;tv-align:center" src="" url="`+hotelInfo.DetailsUrl+`"></img>`
+        mainString += `<title style="tv-align:center;padding:0;margin:10px;">`+hotelInfo.Name+`</title>`
+>>>>>>> Stashed changes
         mainString += `<description allowsZooming="true" moreLabel="more">`+hotelInfo.Description+`</description>`
-        mainString += `<ratingCard style="background-color:rgb(104,104,104);height:100;margin:20;" background-color="rgb(104,104,104)">
-            <title style="tv-align:center;tv-position:top">Guest Rating</title>
+
+        mainString += `<row style="tv-align:center;tv-position:bottom;margin-top:0;margin-bottom:10px;margin-right:50px; height:40px;"><ratingCard style="background-color:rgb(104,104,104);" background-color="rgb(104,104,104)">
+        <title style="tv-align:center;tv-position:top">Guest Rating   </title>
             <ratingBadge style="tv-rating-style:star-l;tv-align:center;tv-position:bottom" value="`+guestRatingValue+`"></ratingBadge>
             </ratingCard>`
-        mainString += `<ratingCard style="background-color:rgb(104,104,104);height:100;margin:20;">
+        mainString += `<ratingCard style="background-color:rgb(104,104,104);">
             <title style="tv-align:center;tv-position:top">Star Rating</title>
             <ratingBadge style="tv-rating-style:star-m;tv-align:center;tv-position:bottom" value="`+starRatingValue+`"></ratingBadge>
-            </ratingCard>`
+            </ratingCard></row>`
     
-        mainString += `<row style="tv-align:center;tv-position:bottom;margin:50;"><buttonLockup style="width:500;">
-        <text style="font-size:30px;">From $`+hotelInfo.FeaturedOffer.Price.TotalRate.Value+` for a `+hotelInfo.FeaturedOffer.LengthOfStay+` day stay!</text>
-        </buttonLockup></row>`
-            
+        mainString += `<row style="tv-align:center;tv-position:bottom;margin:0;"><buttonLockup style="width:500;">
+        <text style="font-size:30px;">From $`+hotelInfo.FeaturedOffer.Price.TotalRate.Value+` for a `+hotelInfo.FeaturedOffer.LengthOfStay+` day stay!</text>`
+        mainString += `</buttonLockup></row>`
+
         mainString += `</lockup></relatedContent></listItemLockup>`
     }
     
@@ -246,6 +255,54 @@ var createHotelsView = function(id, cityName, hotelSearch) {
     var mainDoc = parser.parseFromString(mainString, "application/xml");
     
     return mainDoc;
+}
+
+
+var getHotelPhoto = function(item, callback) { //hotelInfo.DetailsUrl
+    var req = new XMLHttpRequest();
+    req.onerror = function() {
+        var alert = createAlert("ERROR", ""); //leaving 2nd parameter with an empty string
+        navigationDocument.presentModal(alert);
+    };
+    
+    req.onload = function() {
+        
+        var photos = req.responseText.match(/\/\/images\.trvl.*aria-hidden/g);
+        for (var i = 0; i < photos.length; i++) {
+            if (photos[i].indexOf('Featured Image') > -1) {
+                var photo = "http:" + photos[i].match(/\/\/images\.trvl.*\.jpg/g);
+                if (callback)
+                    callback(item, photo);
+            }
+        }
+    };
+    
+    req.onreadystatechange = function() {
+        var status;
+        var data;
+        
+        if (req.readyState == 4) { //request finished and response is ready
+            status = req.status;
+            if (status == 200) {
+                
+            } else {
+                // handle the error
+            }
+        }
+    };
+    
+    req.open("GET", item.getAttribute('url'));
+    req.send();
+    
+}
+
+var populateHotelPhotos = function(hotelsViewDoc) {
+    var images = hotelsViewDoc.getElementsByTagName('img');
+    for(var i = 0; i < images.length; i++) {
+        getHotelPhoto(images.item(i), function(item, photo) {
+                       item.setAttribute('src', photo);
+        });
+    }
 }
 
 var startVideo = function(url) {
