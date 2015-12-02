@@ -277,24 +277,30 @@ var createAvailableFlightsView = function(departureDate, returnDate, timeframe, 
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
         <listTemplate>
-            <list>
-                <header>
-                    <title>Flights from SEA to ${destTla} ${timeframe}</title>
-                </header>
+                <banner>
+                    <title style="color:#4f4f4f;">Flights from SEA to ${destTla} ${timeframe}</title>
+                </banner>
+                <list>
                 <section>`
                     for(var i=0; i<data.length; i++) {
                         mainString += `<listItemLockup>
-                            <title style="font-size: 50%;">${data[i].name} ${data[i].departTime} (${data[i].duration})</title>
+                            <title style="color:#1f1f1f;tv-align:left;tv-position:center;">
+                                <badge style="height:50;width:50;" src="${data[i].logo}" /> ${data[i].name} - ${data[i].departTime}</title>
                             <relatedContent style="margin: 200px;">
-                                <lockup>
-                                    <text style="font-weight: bold; font-size: 30px;">${data[i].departDate} (${data[i].departTime}) –– ${data[i].arriveDate} (${data[i].arriveTime})</text>
-                                    <description></description>
-                                    <text style="font-weight: bold; font-size: 40px;">Airline:</text>
-                                    <description> ${data[i].name}</description>
-                                    <text style="font-weight: bold; font-size: 40px;">Price:</text>
-                                    <description>${data[i].price}</description>
-                                    <text style="font-weight: bold; font-size: 40px;">Duration:</text>
-                                    <description>${data[i].duration}</description>
+                            <lockup>
+                                    <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Timeframe:</text>
+                                    <description style="color:#6b6b6b;">${data[i].departDate} (${data[i].departTime}) –– ${data[i].arriveDate} (${data[i].arriveTime})</description>
+                                    <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Airline:</text>
+                                    <description style="color:#6b6b6b;">${data[i].name}</description>
+                                    <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Flight Number:</text>
+                                    <description style="color:#6b6b6b;">${data[i].flightNumber}</description>
+                                    <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Duration:</text>
+                                    <description style="color:#6b6b6b;">${data[i].duration}</description>
+                                    <row style="tv-align:center;tv-position:bottom;margin:50;">
+                                        <buttonLockup style="width:300;">
+                                            <text style="font-size:30px;">From $${data[i].price}</text>
+                                        </buttonLockup>
+                                    </row>
                                 </lockup>
                             </relatedContent>
                         </listItemLockup>`
@@ -364,7 +370,7 @@ var createTimeframeSelectionView = function(id, url, destTla) {
         var returnDate = getReturnDate(departureDate);
         
         searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
-            var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for next week", evt, destTla);
+            var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for Next Week", evt, destTla);
              navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
         }, function(err) {
@@ -378,7 +384,7 @@ var createTimeframeSelectionView = function(id, url, destTla) {
         var returnDate = getReturnDate(departureDate);
                                        
         searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
-            var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for next month", evt, destTla);
+            var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for Next Month", evt, destTla);
              navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
         }, function(err) {
@@ -392,7 +398,7 @@ var createTimeframeSelectionView = function(id, url, destTla) {
         var returnDate = getReturnDate(departureDate);
                                        
         searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
-            var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "in six months", evt, destTla);
+            var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "in Six Months", evt, destTla);
             navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
         }, function(err) {
