@@ -284,9 +284,11 @@ var createAvailableFlightsView = function(departureDate, returnDate, timeframe, 
                 <section>`
                     for(var i=0; i<data.length; i++) {
                         mainString += `<listItemLockup>
-                            <title>${data[i].name}</title>
-                            <relatedContent>
+                            <title style="font-size: 50%;">${data[i].name} ${data[i].departTime} (${data[i].duration})</title>
+                            <relatedContent style="margin: 200px;">
                                 <lockup>
+                                    <description>${data[i].departDate} (${data[i].departTime}) –– ${data[i].arriveDate} (${data[i].arriveTime})</description>
+                                    <description></description>
                                     <description>Airline: ${data[i].name}</description>
                                     <description>Price: ${data[i].price}</description>
                                     <description>Stops: ${data[i].stops}</description>
