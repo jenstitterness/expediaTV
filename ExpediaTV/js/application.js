@@ -210,7 +210,7 @@ var createHotelsView = function(id, cityName, hotelSearch) {
         var starRatingValue = hotelInfo.StarRating/5;
         var guestRatingValue = hotelInfo.GuestRating/5;
         
-        mainString += `<listItemLockup><title>`+hotelInfo.Name+`</title>`
+        mainString += `<listItemLockup><title><badge style="height:50;width:50;" src="`+hotelInfo.ThumbnailUrl+`"/> `+hotelInfo.Name+`</title>`
         mainString += `<relatedContent height="500"><lockup>`
         mainString += `<title style="tv-align:center;">`+hotelInfo.Name+`</title>`
         mainString += `<description allowsZooming="true" moreLabel="more">`+hotelInfo.Description+`</description>`
