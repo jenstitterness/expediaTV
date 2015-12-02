@@ -681,3 +681,46 @@ searchResults = (function(callback){
 
   return instance;
 })();
+
+var regionService = (function() {
+                     
+    var instance = {
+        endPoint: "http://terminal2.expedia.com:80/x/suggestions/regions",
+        apiKey: "XAAYcpdWrOZCnGyMS5Wmtx06QMG9yWky",
+        offerCount: 10
+    };
+                     
+    instance.search = function(query, done, error) {
+        var params = {
+            "query": query,
+                "apikey": instance.apiKey
+            };
+        ajax.get(instance.endPoint, params, done, error);
+    };
+
+    instance.getOriginTLA = function(done, error) {
+      ipService.search(
+        function(model) {
+            regionService.search(model.city + ", " + model.region, function(model) {done(model.sr[0].a);}, function(errorMsg) {error(errorMsg);})
+        },
+        function(errorMsg) {
+            error(errorMsg);
+        });
+    }
+                     
+    return instance;
+})();
+
+var ipService = (function() {
+                     
+    var instance = {
+        endPoint: "http://ipinfo.io/json"
+    };
+                     
+    instance.search = function(done, error) {
+        var params = {};
+        ajax.get(instance.endPoint, params, done, error);
+    };
+                     
+    return instance;
+})();
