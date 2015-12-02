@@ -298,6 +298,21 @@ var createAvailableFlightsView = function(departureDate, returnDate, timeframe, 
     return mainDoc;
 }
 
+var loadLoadingView = function() {
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
+    <document>
+    <loadingTemplate>
+    <activityIndicator>
+    <title>Finding the best fares</title>
+    </activityIndicator>
+    </loadingTemplate>
+    </document>`
+    
+    var parser = new DOMParser();
+    var mainDoc = parser.parseFromString(mainString, "application/xml");
+    navigationDocument.presentModal(mainDoc);
+}
+
 var createTimeframeSelectionView = function(id, url, destTla) {
     
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -333,12 +348,13 @@ var createTimeframeSelectionView = function(id, url, destTla) {
     var listItems = mainDoc.getElementsByTagName("listItemLockup");
 
     listItems.item(0).addEventListener('select', function(evt) {
-                                       
+       loadLoadingView();
         var departureDate = getDepartureDate(7);
         var returnDate = getReturnDate(departureDate);
         
         searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
             var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for next week", evt, destTla);
+             navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
         }, function(err) {
             createAlert("ERROR", "Flights were not retrieved. Maybe try again, eh?");
@@ -346,12 +362,13 @@ var createTimeframeSelectionView = function(id, url, destTla) {
     });
     
     listItems.item(1).addEventListener('select', function(evt) {
-                                       
+       loadLoadingView();
         var departureDate = getDepartureDate(31);
         var returnDate = getReturnDate(departureDate);
                                        
         searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
             var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for next month", evt, destTla);
+             navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
         }, function(err) {
             createAlert("ERROR", "Flights were not retrieved. Maybe try again, eh?");
@@ -359,12 +376,13 @@ var createTimeframeSelectionView = function(id, url, destTla) {
     });
     
     listItems.item(2).addEventListener('select', function(evt) {
-                                       
+       loadLoadingView();
         var departureDate = getDepartureDate(186);
         var returnDate = getReturnDate(departureDate);
                                        
         searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
             var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "in six months", evt, destTla);
+            navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
         }, function(err) {
             createAlert("ERROR", "Flights were not retrieved. Maybe try again, eh?");
