@@ -143,7 +143,10 @@ var createDestinationView = function(id, cityName, url, airportCode) {
     });
     var flightsMenuItem = mainDoc.getElementById("flights");
     flightsMenuItem.addEventListener('select', function(evt) {
-
+        if(airportCode === ORIGIN_TLA){
+            var alert = createAlert("You're already here, silly!", ""); //leaving 2nd parameter with an empty string
+            navigationDocument.presentModal(alert);
+        }
         var timeframeSelectionViewDoc = createTimeframeSelectionView(id, url, airportCode);
         navigationDocument.pushDocument(timeframeSelectionViewDoc);
     });
@@ -278,7 +281,7 @@ var createAvailableFlightsView = function(departureDate, returnDate, timeframe, 
     <document>
         <listTemplate>
                 <banner>
-                    <title style="color:#4f4f4f;">Flights from SEA to ${destTla} ${timeframe}</title>
+                    <title style="color:#4f4f4f;">Flights from ${ORIGIN_TLA} to ${destTla} ${timeframe}</title>
                 </banner>
                 <list>
                 <section>`
@@ -292,8 +295,10 @@ var createAvailableFlightsView = function(departureDate, returnDate, timeframe, 
                                     <description style="color:#6b6b6b;">${data[i].departDate} (${data[i].departTime}) –– ${data[i].arriveDate} (${data[i].arriveTime})</description>
                                     <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Airline:</text>
                                     <description style="color:#6b6b6b;">${data[i].name}</description>
-                                    <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Flight Number:</text>
-                                    <description style="color:#6b6b6b;">${data[i].flightNumber}</description>
+                                    <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Departure Flight:</text>
+                                    <description style="color:#6b6b6b;">${data[i].departFlightNumber}</description>
+                                    <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Return Flight:</text>
+                                    <description style="color:#6b6b6b;">${data[i].returnFlightNumber}</description>
                                     <text style="font-weight: bold; font-size: 40px; color:#6b6b6b;">Duration:</text>
                                     <description style="color:#6b6b6b;">${data[i].duration}</description>
                                     <row style="tv-align:center;tv-position:bottom;margin:50;">
@@ -369,7 +374,7 @@ var createTimeframeSelectionView = function(id, url, destTla) {
         var departureDate = getDepartureDate(7);
         var returnDate = getReturnDate(departureDate);
         
-        searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
+        searchResults.search(ORIGIN_TLA, destTla, departureDate, returnDate, function(evt) {
             var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for Next Week", evt, destTla);
              navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
@@ -383,7 +388,7 @@ var createTimeframeSelectionView = function(id, url, destTla) {
         var departureDate = getDepartureDate(31);
         var returnDate = getReturnDate(departureDate);
                                        
-        searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
+        searchResults.search(ORIGIN_TLA, destTla, departureDate, returnDate, function(evt) {
             var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "for Next Month", evt, destTla);
              navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
@@ -397,7 +402,7 @@ var createTimeframeSelectionView = function(id, url, destTla) {
         var departureDate = getDepartureDate(186);
         var returnDate = getReturnDate(departureDate);
                                        
-        searchResults.search("SEA", destTla, departureDate, returnDate, function(evt) {
+        searchResults.search(ORIGIN_TLA, destTla, departureDate, returnDate, function(evt) {
             var selectionDoc = createAvailableFlightsView(departureDate, returnDate, "in Six Months", evt, destTla);
             navigationDocument.dismissModal(); // remove load view
             navigationDocument.pushDocument(selectionDoc);
