@@ -1,7 +1,9 @@
 var _API_KEY = "XAAYcpdWrOZCnGyMS5Wmtx06QMG9yWky";
+var ORIGIN_TLA = "SEA";
 
 App.onLaunch = function(options) {
     
+  regionService.getOriginTLA(saveTLA, reportError);
   var req = new XMLHttpRequest();
   req.responseType = "application/json";
 
@@ -487,8 +489,9 @@ var ajax = (function() {
         var query = endPoint + instance.param(params);
         var request = new XMLHttpRequest();
         request.open("GET", query);
+        request.responseType = "application/json";
         request.onreadystatechange = function() {
-            if(request.readyState == XMLHttpRequest.DONE) {
+            if(request.readyState == 4) {
                 if(request.status === 200) {
                     var data;
                     if(!request.responseType || request.responseType === "text") {
@@ -697,7 +700,7 @@ var regionService = (function() {
     instance.getOriginTLA = function(done, error) {
       ipService.search(
         function(model) {
-            regionService.search(model.city + ", " + model.region, function(model) {done(model.sr[0].a);}, function(errorMsg) {error(errorMsg);})
+            regionService.search(encodeURI(model.city + ", " + model.region), function(model) {done(model.sr[0].a);}, function(errorMsg) {error(errorMsg);})
         },
         function(errorMsg) {
             error(errorMsg);
@@ -720,3 +723,12 @@ var ipService = (function() {
                      
     return instance;
 })();
+
+var saveTLA = function(tla) {
+  ORIGIN_TLA = tla;
+}
+
+var reportError = function(errorMsg) {
+  var alert = createAlert(errorMsg, ""); 
+  navigationDocument.presentModal(alert);
+}
