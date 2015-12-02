@@ -719,7 +719,8 @@ searchResults = (function(callback){
       "arriveDate": instance.getPrettyDate(legs[0].segments[legs[0].segments.length-1].arrivalTimeRaw),
       "arriveTime": instance.getPrettyTime(legs[0].segments[legs[0].segments.length-1].arrivalTimeRaw),
       "logo": instance.getIconURL(legs[0].segments[0].airlineCode),
-      "flightNumber": legs[0].segments[0].flightNumber
+      "departFlightNumber": legs[0].segments[0].flightNumber,
+      "returnFlightNumber": legs[legs.length-1].segments[legs[legs.length-1].segments.length-1].flightNumber
     };
   }
 
