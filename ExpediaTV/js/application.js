@@ -677,13 +677,25 @@ searchResults = (function(callback){
       "price": offer.totalFare,
       "duration": instance.calcDuration(legs),
       "stops": instance.calcStops(legs),
-      "departTime": instance.getPrettyTime(legs[0].segments[0].departureTimeRaw)
+      "departDate": instance.getPrettyDate(legs[0].segments[0].departureTimeRaw),
+      "departTime": instance.getPrettyTime(legs[0].segments[0].departureTimeRaw),
+      "arriveDate": instance.getPrettyDate(legs[0].segments[legs[0].segments.length-1].arrivalTimeRaw),
+      "arriveTime": instance.getPrettyTime(legs[0].segments[legs[0].segments.length-1].arrivalTimeRaw)
     };
+  }
+
+  instance.getPrettyDate = function(date) {
+    var d = new Date(date);
+    return  (d.getMonth() + 1 < 10 ? "0" : "") + (d.getMonth() + 1) + "/" + (d.getDate() < 10 ? "0" : "") + d.getDate() + "/" + d.getFullYear();
   }
 
   instance.getPrettyTime = function(time) {
     var d = new Date(time);
-    return ((d.getHours()+1)% 12) + ":" + (d.getMinutes() < 10 ? "0" : "") + d.getMinutes() + " " + (d.getHours() > 11 ? "PM" : "AM");
+    var hour = d.getHours()+1;
+    if(hour > 12) {
+      hour -= 12;
+    }
+    return hour + ":" + (d.getMinutes() < 10 ? "0" : "") + d.getMinutes() + " " + (d.getHours() + 1 > 11 ? "PM" : "AM");
   }
 
   instance.calcStops = function(legs) {
