@@ -207,12 +207,25 @@ var createHotelsView = function(id, cityName, hotelSearch) {
     for (var i = 0; i < hotelSearch.HotelInfoList.HotelInfo.length; i++) {
         
         var hotelInfo = hotelSearch.HotelInfoList.HotelInfo[i];
+        var starRatingValue = hotelInfo.StarRating/5;
+        var guestRatingValue = hotelInfo.GuestRating/5;
         
         mainString += `<listItemLockup><title>`+hotelInfo.Name+`</title>`
         mainString += `<relatedContent height="500"><lockup>`
-        mainString += `<title>`+hotelInfo.Name+`</title>`
+        mainString += `<title style="tv-align:center;">`+hotelInfo.Name+`</title>`
         mainString += `<description allowsZooming="true" moreLabel="more">`+hotelInfo.Description+`</description>`
-        mainString += `<description allowsZooming="true" moreLabel="more" style="tv-text-style:subtitle2">From $`+hotelInfo.FeaturedOffer.Price.TotalRate.Value+` for a `+hotelInfo.FeaturedOffer.LengthOfStay+` day stay!</description>`
+        mainString += `<ratingCard style="background-color:rgb(104,104,104);height:100;margin:20;" background-color="rgb(104,104,104)">
+            <title style="tv-align:center;tv-position:top">Guest Rating</title>
+            <ratingBadge style="tv-rating-style:star-l;tv-align:center;tv-position:bottom" value="`+guestRatingValue+`"></ratingBadge>
+            </ratingCard>`
+        mainString += `<ratingCard style="background-color:rgb(104,104,104);height:100;margin:20;">
+            <title style="tv-align:center;tv-position:top">Star Rating</title>
+            <ratingBadge style="tv-rating-style:star-m;tv-align:center;tv-position:bottom" value="`+starRatingValue+`"></ratingBadge>
+            </ratingCard>`
+    
+        mainString += `<row style="tv-align:center;tv-position:bottom;margin:50;"><buttonLockup style="width:500;">
+        <text style="font-size:30px;">From $`+hotelInfo.FeaturedOffer.Price.TotalRate.Value+` for a `+hotelInfo.FeaturedOffer.LengthOfStay+` day stay!</text>
+        </buttonLockup></row>`
             
         mainString += `</lockup></relatedContent></listItemLockup>`
     }
