@@ -183,10 +183,17 @@ var createActivitiesView = function(id, cityName, jsonResponse) {
         
         var activity = jsonResponse.activities[i];
         var imageUrl = 'http:' + activity.imageUrl.split('//')[1];
+        var recScore = activity.recommendationScore/100;
         
         mainString += `<listItemLockup><title>`+activity.title+`</title>`
         mainString += `<relatedContent><lockup><img src="`+imageUrl+`"/>`
-        mainString += `<description>`+activity.title+ `<br/><br/>From `+activity.fromPrice+` `+activity.fromPriceLabel+`</description>`
+        mainString += `<ratingCard style="background-color:rgb(104,104,104);height:100;margin:20;" background-color="rgb(104,104,104)">
+            <title style="tv-align:center;tv-position:top">Recommendation Score</title>
+            <ratingBadge style="tv-rating-style:star-l;tv-align:center;tv-position:bottom" value="`+recScore+`"></ratingBadge>
+            </ratingCard>`
+        mainString += `<row style="tv-align:center;tv-position:bottom;margin:50;"><buttonLockup style="width:500;">
+        <text style="font-size:30px;">From `+activity.fromPrice+` `+activity.fromPriceLabel+`</text>
+            </buttonLockup></row>`
         mainString += `</lockup></relatedContent></listItemLockup>`
     }
     
