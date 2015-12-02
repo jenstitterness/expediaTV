@@ -698,8 +698,13 @@ searchResults = (function(callback){
       "departDate": instance.getPrettyDate(legs[0].segments[0].departureTimeRaw),
       "departTime": instance.getPrettyTime(legs[0].segments[0].departureTimeRaw),
       "arriveDate": instance.getPrettyDate(legs[0].segments[legs[0].segments.length-1].arrivalTimeRaw),
-      "arriveTime": instance.getPrettyTime(legs[0].segments[legs[0].segments.length-1].arrivalTimeRaw)
+      "arriveTime": instance.getPrettyTime(legs[0].segments[legs[0].segments.length-1].arrivalTimeRaw),
+      "logo": instance.getIconURL(legs[0].segments[0].airlineCode)
     };
+  }
+
+  instance.getIconURL = function(airlineCode) {
+    return "http://images.trvl-media.com/media/content/expus/graphics/static_content/fusion/v0.1b/images/airlines/s/" + airlineCode + "_sq.jpg"
   }
 
   instance.getPrettyDate = function(date) {
