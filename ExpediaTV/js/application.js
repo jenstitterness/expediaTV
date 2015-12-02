@@ -624,7 +624,6 @@ searchResults = (function(callback){
   instance.search = function(origin, destination, startDate, endDate, callback) {
     var stayLength = 7;
     instance.displayCallBack = callback;
-    unrealDealService.search(origin, destination, startDate, endDate, stayLength, instance.unrealDealDone, instance.unrealDealError);
     flightService.search(origin, destination, startDate, endDate, instance.flightsDone, instance.flightsError);
   }
 
