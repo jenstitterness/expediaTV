@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TVApplicationControllerDe
     
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         // 1
@@ -34,6 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TVApplicationControllerDe
         
         // 3
         appController = TVApplicationController(context: appControllerContext, window: window, delegate: self)
+        
+        // extend splash screen duration
+        [NSThread .sleepForTimeInterval(2.0)]
         return true
     }
     
