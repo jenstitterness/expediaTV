@@ -176,7 +176,7 @@ var createDestinationView = function(id, cityName, url, airportCode) {
 var createActivitiesView = function(id, cityName, jsonResponse) {
     
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?><document><listTemplate><banner>`
-    mainString += `<title>` + cityName + ` Activities</title>`
+    mainString += `<title style="tv-text-style:title1;color:#4f4f4f;">` + cityName + ` Activities</title>`
     mainString += `</banner><list><section>`
     
     for (var i = 0; i < jsonResponse.activities.length; i++) {
@@ -185,11 +185,11 @@ var createActivitiesView = function(id, cityName, jsonResponse) {
         var imageUrl = 'http:' + activity.imageUrl.split('//')[1];
         var recScore = activity.recommendationScore/100;
         
-        mainString += `<listItemLockup><title>`+activity.title+`</title>`
+        mainString += `<listItemLockup><title style="color:#1f1f1f;">`+activity.title+`</title>`
         mainString += `<relatedContent><lockup><img src="`+imageUrl+`"/>`
-        mainString += `<ratingCard style="background-color:rgb(104,104,104);height:100;margin:20;" background-color="rgb(104,104,104)">
+        mainString += `<ratingCard style="height:100;margin:20;">
             <title style="tv-align:center;tv-position:top">Recommendation Score</title>
-            <ratingBadge style="tv-rating-style:star-l;tv-align:center;tv-position:bottom" value="`+recScore+`"></ratingBadge>
+            <ratingBadge style="tv-rating-style:star-l;tv-align:center;tv-position:bottom;" value="`+recScore+`"></ratingBadge>
             </ratingCard>`
         mainString += `<row style="tv-align:center;tv-position:bottom;margin:50;"><buttonLockup style="width:500;">
         <text style="font-size:30px;">From `+activity.fromPrice+` `+activity.fromPriceLabel+`</text>
@@ -208,7 +208,7 @@ var createActivitiesView = function(id, cityName, jsonResponse) {
 var createHotelsView = function(id, cityName, hotelSearch) {
     
     var mainString = `<?xml version="1.0" encoding="UTF-8" ?><document><listTemplate><banner>`
-    mainString += `<title>` + cityName + ` Hotels</title>`
+    mainString += `<title style="tv-text-style:title1;color:#4f4f4f;">` + cityName + ` Hotels</title>`
     mainString += `</banner><list><section>`
     
     for (var i = 0; i < hotelSearch.HotelInfoList.HotelInfo.length; i++) {
@@ -217,7 +217,7 @@ var createHotelsView = function(id, cityName, hotelSearch) {
         var starRatingValue = hotelInfo.StarRating/5;
         var guestRatingValue = hotelInfo.GuestRating/5;
         
-        mainString += `<listItemLockup><title><badge style="height:50;width:50;" src="`+hotelInfo.ThumbnailUrl+`"/> `+hotelInfo.Name+`</title>`
+        mainString += `<listItemLockup><title style="color:#1f1f1f;"><badge style="height:50;width:50;" src="`+hotelInfo.ThumbnailUrl+`"/> `+hotelInfo.Name+`</title>`
         mainString += `<relatedContent height="500"><lockup>`
         mainString += `<title style="tv-align:center;">`+hotelInfo.Name+`</title>`
         mainString += `<description allowsZooming="true" moreLabel="more">`+hotelInfo.Description+`</description>`
