@@ -477,7 +477,7 @@ var getHotelSearch = function(latlong, callback) {
         }
     };
     
-    req.open("GET", "http://terminal2.expedia.com:80/x/hotels?maxhotels=10&radius=5km&location="+ latlong.lat +"%2C"+latlong.lng);
+    req.open("GET", "http://terminal2.expedia.com:80/x/hotels?maxhotels=20&radius=5km&location="+ latlong.lat +"%2C"+latlong.lng);
     req.setRequestHeader("Authorization", "expedia-apikey key="+_API_KEY);
     req.send();
 }
