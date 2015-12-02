@@ -157,7 +157,7 @@ var createDestinationView = function(id, cityName, url, airportCode) {
                        getHotelSearch(latlong, function(hotelSearch) {
                                       var hotelsViewDoc = createHotelsView(id, cityName, hotelSearch);
                                       navigationDocument.pushDocument(hotelsViewDoc);
-                                      populateHotelPhotos(hotelsViewDoc);
+                                      //populateHotelPhotos(hotelsViewDoc);
                                       });
                        });
                                     
@@ -221,32 +221,27 @@ var createHotelsView = function(id, cityName, hotelSearch) {
         var starRatingValue = hotelInfo.StarRating/5;
         var guestRatingValue = hotelInfo.GuestRating/5;
         
-<<<<<<< Updated upstream
-        mainString += `<listItemLockup><title style="color:#1f1f1f;"><badge style="height:50;width:50;" src="`+hotelInfo.ThumbnailUrl+`"/> `+hotelInfo.Name+`</title>`
-        mainString += `<relatedContent height="500"><lockup>`
+mainString += `<listItemLockup><title style="color:#1f1f1f;"><badge style="height:50;width:50;" src="`+hotelInfo.ThumbnailUrl+`"/> `+hotelInfo.Name+`</title>`
+         mainString += `<relatedContent height="500"><lockup>`
         mainString += `<title style="tv-align:center;">`+hotelInfo.Name+`</title>`
-=======
-        mainString += `<listItemLockup style="padding:0;margin:10px;"><title style="padding:0;margin:10px">`+hotelInfo.Name+`</title>`
-        mainString += `<relatedContent style="padding:0;margin:20px"><lockup style="padding:0;margin:10px">`
-        mainString += `<img style="padding:0;margin:10px;tv-position:top;tv-align:center" src="" url="`+hotelInfo.DetailsUrl+`"></img>`
-        mainString += `<title style="tv-align:center;padding:0;margin:10px;">`+hotelInfo.Name+`</title>`
->>>>>>> Stashed changes
-        mainString += `<description allowsZooming="true" moreLabel="more">`+hotelInfo.Description+`</description>`
-
-        mainString += `<row style="tv-align:center;tv-position:bottom;margin-top:0;margin-bottom:10px;margin-right:50px; height:40px;"><ratingCard style="background-color:rgb(104,104,104);" background-color="rgb(104,104,104)">
-        <title style="tv-align:center;tv-position:top">Guest Rating   </title>
-            <ratingBadge style="tv-rating-style:star-l;tv-align:center;tv-position:bottom" value="`+guestRatingValue+`"></ratingBadge>
-            </ratingCard>`
-        mainString += `<ratingCard style="background-color:rgb(104,104,104);">
-            <title style="tv-align:center;tv-position:top">Star Rating</title>
-            <ratingBadge style="tv-rating-style:star-m;tv-align:center;tv-position:bottom" value="`+starRatingValue+`"></ratingBadge>
-            </ratingCard></row>`
-    
-        mainString += `<row style="tv-align:center;tv-position:bottom;margin:0;"><buttonLockup style="width:500;">
-        <text style="font-size:30px;">From $`+hotelInfo.FeaturedOffer.Price.TotalRate.Value+` for a `+hotelInfo.FeaturedOffer.LengthOfStay+` day stay!</text>`
-        mainString += `</buttonLockup></row>`
-
+        
+mainString += `<description allowsZooming="true" moreLabel="more">`+hotelInfo.Description+`</description>`        
+        
+        mainString += `<ratingCard style="background-color:rgb(104,104,104);height:100;margin:20;" background-color="rgb(104,104,104)">
+        <title style="tv-align:center;tv-position:top">Guest Rating</title>
+        <ratingBadge style="tv-rating-style:star-l;tv-align:center;tv-position:bottom" value="`+guestRatingValue+`"></ratingBadge>
+         </ratingCard>`
+        
+        mainString += `<ratingCard style="background-color:rgb(104,104,104);height:100;margin:20;">
+        <title style="tv-align:center;tv-position:top">Star Rating</title>
+        <ratingBadge style="tv-rating-style:star-m;tv-align:center;tv-position:bottom" value="`+starRatingValue+`"></ratingBadge>
+        </ratingCard>`
+        
+        mainString += `<row style="tv-align:center;tv-position:bottom;margin:50;"><buttonLockup style="width:500;">
+        <text style="font-size:30px;">From $`+hotelInfo.FeaturedOffer.Price.TotalRate.Value+` for a `+hotelInfo.FeaturedOffer.LengthOfStay+` day stay!</text>
+            </buttonLockup></row>`
         mainString += `</lockup></relatedContent></listItemLockup>`
+        
     }
     
     mainString += `</section></list></listTemplate></document>`
