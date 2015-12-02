@@ -667,8 +667,24 @@ searchResults = (function(callback){
       "name": legs[0].segments[0].airlineName,
       "price": offer.totalFare,
       "duration": instance.calcDuration(legs),
-      "stops": legs[0].segments.length
+      "stops": instance.calcStops(legs),
+      "departTime": instance.getPrettyTime(legs[0].segments[0].departureTimeRaw)
     };
+  }
+
+  instance.getPrettyTime = function(time) {
+    var d = new Date(time);
+    return ((d.getHours()+1)% 12) + ":" + (d.getMinutes() < 10 ? "0" : "") + d.getMinutes() + " " + (d.getHours() > 11 ? "PM" : "AM");
+  }
+
+  instance.calcStops = function(legs) {
+    var stops = 0;
+    for(var leg in legs) {
+      for(var segment in legs[leg].segments) {
+        stops += legs[leg].segments[segment].stops;
+      }
+    }
+    return stops;
   }
 
   instance.calcDuration = function(legs) {
