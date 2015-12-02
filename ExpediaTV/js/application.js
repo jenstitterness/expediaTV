@@ -650,14 +650,53 @@ searchResults = (function(callback){
   };
 
   instance.mapFlights = function(offer, model) {
+    var legs = instance.getLegs(offer, model);
     return {
-      "name": instance.mapOfferName(offer, model),
-      "price": offer.totalFare
+      "name": legs[0].segments[0].airlineName,
+      "price": offer.totalFare,
+      "duration": instance.calcDuration(legs),
+      "stops": legs[0].segments.length
     };
   }
 
-  instance.mapOfferName = function(offer, model) {
-    return instance.getLegByID(offer.legIds[0], model).segments[0].airlineName;
+  instance.calcDuration = function(legs) {
+    var minutes = 0;
+    for(var leg in legs) {
+      for(var segment in legs[leg].segments) {
+        minutes += instance.parseDuration(legs[leg].segments[segment].duration);
+      }
+    }
+    var res = "";
+    if(minutes > 60) {
+      res += Math.floor(minutes/60) + " hours ";
+    }
+    if(minutes % 60) {
+      res += (minutes % 60) + " minutes";
+    }
+    return res;
+  }
+
+  instance.parseDuration = function(duration) {
+    var res = 0;
+    var days = duration.match(/(\d+)\s*D/);
+    var hours = duration.match(/(\d+)\s*H/);
+    var minutes = duration.match(/(\d+)\s*M/);
+    if (days) { res += parseInt(days[1])*1440;}
+    if (hours) { res += parseInt(hours[1])*60;}
+    if (minutes) { res += parseInt(minutes[1]);}
+    return res;
+  }
+  
+  instance.splitDuration = function(duration) {
+    var chars = duration.split('')
+  }
+
+  instance.getLegs = function(offer, model) {
+    var legs = [];
+    for(var legId in offer.legIds) {
+      legs.push(instance.getLegByID(offer.legIds[legId], model));
+    }
+    return legs;
   }
 
   instance.getLegByID = function(legId, model) {
