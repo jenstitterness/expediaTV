@@ -198,29 +198,25 @@ var createActivitiesView = function(id, cityName, jsonResponse) {
 
 var createHotelsView = function(id, cityName, hotelSearch) {
     
-    var mainString = `<?xml version="1.0" encoding="UTF-8" ?>
-    <document>
-    <listTemplate>
-    <banner>`
-    mainString += `<title>`+cityName+` Hotels</title>`
-    mainString += `</banner>
-    <list>
-    <section>
-    <listItemLockup>
-    <title>`+hotelSearch.HotelInfoList.HotelInfo[0].Name+`</title>
-    <relatedContent>
-    <lockup>
-    <img src="" width="857" height="482" />
-    <title>Hotel 1</title>
-    <description>A brief description for the first hotel should go here.</description>
-        </lockup>
-        </relatedContent>
-        </listItemLockup>
-        </section>
-        </list>
-        </listTemplate>
-        </document>`
+    var mainString = `<?xml version="1.0" encoding="UTF-8" ?><document><listTemplate><banner>`
+    mainString += `<title>` + cityName + ` Hotels</title>`
+    mainString += `</banner><list><section>`
+    
+    for (var i = 0; i < hotelSearch.HotelInfoList.HotelInfo.length; i++) {
         
+        var hotelInfo = hotelSearch.HotelInfoList.HotelInfo[i];
+        
+        mainString += `<listItemLockup><title>`+hotelInfo.Name+`</title>`
+        mainString += `<relatedContent height="500"><lockup>`
+        mainString += `<title>`+hotelInfo.Name+`</title>`
+        mainString += `<description allowsZooming="true" moreLabel="more">`+hotelInfo.Description+`</description>`
+        mainString += `<description allowsZooming="true" moreLabel="more" style="tv-text-style:subtitle2">From $`+hotelInfo.FeaturedOffer.Price.TotalRate.Value+` for a `+hotelInfo.FeaturedOffer.LengthOfStay+` day stay!</description>`
+            
+        mainString += `</lockup></relatedContent></listItemLockup>`
+    }
+    
+    mainString += `</section></list></listTemplate></document>`
+    
     var parser = new DOMParser();
     var mainDoc = parser.parseFromString(mainString, "application/xml");
     
