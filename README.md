@@ -1,4 +1,6 @@
-# expediaTV
+# expediaTV - Hackathon app
+
+## This won't work any longer. Don't bother running it. 
 
 ## to run the server
 run this command in the folder that hosts the js files (ExpediaTV/)
